@@ -1,0 +1,6 @@
+[2026-02-20 09:42:29,825] -- INFO - decorators.py -- wrap - Line no - 88 -- Data by POST for Incoming Login Request by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 09:42:40,773] -- INFO - login_serializer.py -- GetUserData - Line no - 35 --  New User Created Against Ldap User -- njajal
+
+[2026-02-20 09:42:40,801] -- INFO - views.py -- post - Line no - 686 -- Token Successful for user -- njajal -- IP -- 127.0.0.1
+

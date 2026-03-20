@@ -1,0 +1,204 @@
+[2026-03-03 11:19:25,349] -- ERROR - sync_products_data.py -- insert_data - Line no - 155 -- EXCEPTION OCCURRED WHILE SYNCING SAP DATA WITH EMPLOYEE MASTER DATA
+
+[2026-03-03 11:19:25,349] -- ERROR - sync_products_data.py -- insert_data - Line no - 156 -- (psycopg2.errors.UndefinedColumn) column "SO_NUMBER" of relation "MST_SODATA" does not exist
+LINE 1: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLAN...
+                                  ^
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PAYMENT_TERMS", "CUSTOMER_PO_NUMBER", "CUSTOMER_PO_DATE", "INCO_TERMS", "INCO_LOCATION", "SPECIAL_REMARK_BEMOT") VALUES (%(SO_NUMBER__ ... 287564 characters truncated ... CUSTOMER_PO_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s, %(SPECIAL_REMARK_BEMOT__999)s)]
+[parameters: {'PLANT_CODE__0': '2910', 'SHIP_TO_PARTY__0': '0002700160', 'SO_VALUE__0': 0.0, 'CUSTOMER_PO_NUMBER__0': '.', 'PAYMENT_TERMS__0': 'LCAS', 'CUSTOMER_CODE__0': '0002700328', 'SPECIAL_REMARK_BEMOT__0': '.', 'COMPANY_CODE__0': '2900', 'INCO_TERMS__0': 'EXW', 'SO_NUMBER__0': '0210000780', 'CUSTOMER_PO_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_LOCATION__0': 'TANJUNG PRIOK', 'PLANT_CODE__1': '2910', 'SHIP_TO_PARTY__1': '0002502206', 'SO_VALUE__1': 3951486.64, 'CUSTOMER_PO_NUMBER__1': 'SECONDARY', 'PAYMENT_TERMS__1': 'ADVN', 'CUSTOMER_CODE__1': '0002502206', 'SPECIAL_REMARK_BEMOT__1': 'SECONDARY', 'COMPANY_CODE__1': '2900', 'INCO_TERMS__1': 'EXW', 'SO_NUMBER__1': '0243002530', 'CUSTOMER_PO_DATE__1': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_LOCATION__1': 'PT. AM/NS Indonesia', 'PLANT_CODE__2': '2910', 'SHIP_TO_PARTY__2': '0002600757', 'SO_VALUE__2': 3569650.0, 'CUSTOMER_PO_NUMBER__2': '008/I/Nasco/2026', 'PAYMENT_TERMS__2': 'ADV4', 'CUSTOMER_CODE__2': '0002500010', 'SPECIAL_REMARK_BEMOT__2': '008/I/Nasco/2026', 'COMPANY_CODE__2': '2900', 'INCO_TERMS__2': 'DEL', 'SO_NUMBER__2': '0250005022', 'CUSTOMER_PO_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'PLANT_CODE__3': '2910', 'SHIP_TO_PARTY__3': '0002600757', 'SO_VALUE__3': 3569650.0, 'CUSTOMER_PO_NUMBER__3': '008/I/Nasco/2026', 'PAYMENT_TERMS__3': 'ADV4', 'CUSTOMER_CODE__3': '0002500010', 'SPECIAL_REMARK_BEMOT__3': '008/I/Nasco/2026', 'COMPANY_CODE__3': '2900', 'INCO_TERMS__3': 'DEL', 'SO_NUMBER__3': '0250005022', 'CUSTOMER_PO_DATE__3': datetime.datetime(2026, 1, 28, 0, 0), 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'PLANT_CODE__4': '2910', 'SHIP_TO_PARTY__4': '0002700160' ... 11900 parameters truncated ... 'CUSTOMER_PO_DATE__995': datetime.datetime(2025, 1, 7, 0, 0), 'INCO_LOCATION__995': 'KHOPOLI', 'PLANT_CODE__996': '2010', 'SHIP_TO_PARTY__996': '0000106198', 'SO_VALUE__996': 92.84, 'CUSTOMER_PO_NUMBER__996': '4120094867', 'PAYMENT_TERMS__996': 'EX01', 'CUSTOMER_CODE__996': '0000106198', 'SPECIAL_REMARK_BEMOT__996': '4120094867', 'COMPANY_CODE__996': '2000', 'INCO_TERMS__996': 'CFR', 'SO_NUMBER__996': '2110111012', 'CUSTOMER_PO_DATE__996': datetime.datetime(2025, 1, 7, 0, 0), 'INCO_LOCATION__996': 'KHOPOLI', 'PLANT_CODE__997': '2010', 'SHIP_TO_PARTY__997': '0000106198', 'SO_VALUE__997': 14030600.0, 'CUSTOMER_PO_NUMBER__997': '4120094867', 'PAYMENT_TERMS__997': 'EX01', 'CUSTOMER_CODE__997': '0000106198', 'SPECIAL_REMARK_BEMOT__997': '4120094867', 'COMPANY_CODE__997': '2000', 'INCO_TERMS__997': 'CFR', 'SO_NUMBER__997': '2110111013', 'CUSTOMER_PO_DATE__997': datetime.datetime(2025, 1, 7, 0, 0), 'INCO_LOCATION__997': 'KHOPOLI', 'PLANT_CODE__998': '2010', 'SHIP_TO_PARTY__998': '0000106198', 'SO_VALUE__998': 3321.0, 'CUSTOMER_PO_NUMBER__998': '4120094878', 'PAYMENT_TERMS__998': 'EX01', 'CUSTOMER_CODE__998': '0000106198', 'SPECIAL_REMARK_BEMOT__998': '4120094878', 'COMPANY_CODE__998': '2000', 'INCO_TERMS__998': 'CFR', 'SO_NUMBER__998': '2110111038', 'CUSTOMER_PO_DATE__998': datetime.datetime(2025, 1, 7, 0, 0), 'INCO_LOCATION__998': 'KHOPOLI', 'PLANT_CODE__999': '2010', 'SHIP_TO_PARTY__999': '0000106198', 'SO_VALUE__999': 9581711.93, 'CUSTOMER_PO_NUMBER__999': '4120094327', 'PAYMENT_TERMS__999': 'X015', 'CUSTOMER_CODE__999': '0000106198', 'SPECIAL_REMARK_BEMOT__999': '4120094327', 'COMPANY_CODE__999': '2000', 'INCO_TERMS__999': 'CFR', 'SO_NUMBER__999': '2110109338', 'CUSTOMER_PO_DATE__999': datetime.datetime(2024, 12, 4, 0, 0), 'INCO_LOCATION__999': 'KHOPOLI'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+[2026-03-03 11:19:25,373] -- ERROR - sync_products_data.py -- insert_data - Line no - 157 -- Traceback (most recent call last):
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.UndefinedColumn: column "SO_NUMBER" of relation "MST_SODATA" does not exist
+LINE 1: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLAN...
+                                  ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 152, in insert_data
+    data_df.to_sql('MST_SODATA', con=conn_postgres, index=False, if_exists='append')
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\util\_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\core\generic.py", line 3087, in to_sql
+    return sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 842, in to_sql
+    return pandas_sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 2018, in to_sql
+    total_inserted = sql_engine.insert_records(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1567, in insert_records
+    raise err
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1558, in insert_records
+    return table.insert(chunksize=chunksize, method=method)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1119, in insert
+    num_inserted = exec_insert(conn, keys, chunk_iter)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1010, in _execute_insert
+    result = conn.execute(self.table.insert(), data)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_insertmany_context(dialect, context)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2124, in _exec_insertmany_context
+    self._handle_dbapi_exception(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column "SO_NUMBER" of relation "MST_SODATA" does not exist
+LINE 1: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLAN...
+                                  ^
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PAYMENT_TERMS", "CUSTOMER_PO_NUMBER", "CUSTOMER_PO_DATE", "INCO_TERMS", "INCO_LOCATION", "SPECIAL_REMARK_BEMOT") VALUES (%(SO_NUMBER__ ... 287564 characters truncated ... CUSTOMER_PO_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s, %(SPECIAL_REMARK_BEMOT__999)s)]
+[parameters: {'PLANT_CODE__0': '2910', 'SHIP_TO_PARTY__0': '0002700160', 'SO_VALUE__0': 0.0, 'CUSTOMER_PO_NUMBER__0': '.', 'PAYMENT_TERMS__0': 'LCAS', 'CUSTOMER_CODE__0': '0002700328', 'SPECIAL_REMARK_BEMOT__0': '.', 'COMPANY_CODE__0': '2900', 'INCO_TERMS__0': 'EXW', 'SO_NUMBER__0': '0210000780', 'CUSTOMER_PO_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_LOCATION__0': 'TANJUNG PRIOK', 'PLANT_CODE__1': '2910', 'SHIP_TO_PARTY__1': '0002502206', 'SO_VALUE__1': 3951486.64, 'CUSTOMER_PO_NUMBER__1': 'SECONDARY', 'PAYMENT_TERMS__1': 'ADVN', 'CUSTOMER_CODE__1': '0002502206', 'SPECIAL_REMARK_BEMOT__1': 'SECONDARY', 'COMPANY_CODE__1': '2900', 'INCO_TERMS__1': 'EXW', 'SO_NUMBER__1': '0243002530', 'CUSTOMER_PO_DATE__1': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_LOCATION__1': 'PT. AM/NS Indonesia', 'PLANT_CODE__2': '2910', 'SHIP_TO_PARTY__2': '0002600757', 'SO_VALUE__2': 3569650.0, 'CUSTOMER_PO_NUMBER__2': '008/I/Nasco/2026', 'PAYMENT_TERMS__2': 'ADV4', 'CUSTOMER_CODE__2': '0002500010', 'SPECIAL_REMARK_BEMOT__2': '008/I/Nasco/2026', 'COMPANY_CODE__2': '2900', 'INCO_TERMS__2': 'DEL', 'SO_NUMBER__2': '0250005022', 'CUSTOMER_PO_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'PLANT_CODE__3': '2910', 'SHIP_TO_PARTY__3': '0002600757', 'SO_VALUE__3': 3569650.0, 'CUSTOMER_PO_NUMBER__3': '008/I/Nasco/2026', 'PAYMENT_TERMS__3': 'ADV4', 'CUSTOMER_CODE__3': '0002500010', 'SPECIAL_REMARK_BEMOT__3': '008/I/Nasco/2026', 'COMPANY_CODE__3': '2900', 'INCO_TERMS__3': 'DEL', 'SO_NUMBER__3': '0250005022', 'CUSTOMER_PO_DATE__3': datetime.datetime(2026, 1, 28, 0, 0), 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'PLANT_CODE__4': '2910', 'SHIP_TO_PARTY__4': '0002700160' ... 11900 parameters truncated ... 'CUSTOMER_PO_DATE__995': datetime.datetime(2025, 1, 7, 0, 0), 'INCO_LOCATION__995': 'KHOPOLI', 'PLANT_CODE__996': '2010', 'SHIP_TO_PARTY__996': '0000106198', 'SO_VALUE__996': 92.84, 'CUSTOMER_PO_NUMBER__996': '4120094867', 'PAYMENT_TERMS__996': 'EX01', 'CUSTOMER_CODE__996': '0000106198', 'SPECIAL_REMARK_BEMOT__996': '4120094867', 'COMPANY_CODE__996': '2000', 'INCO_TERMS__996': 'CFR', 'SO_NUMBER__996': '2110111012', 'CUSTOMER_PO_DATE__996': datetime.datetime(2025, 1, 7, 0, 0), 'INCO_LOCATION__996': 'KHOPOLI', 'PLANT_CODE__997': '2010', 'SHIP_TO_PARTY__997': '0000106198', 'SO_VALUE__997': 14030600.0, 'CUSTOMER_PO_NUMBER__997': '4120094867', 'PAYMENT_TERMS__997': 'EX01', 'CUSTOMER_CODE__997': '0000106198', 'SPECIAL_REMARK_BEMOT__997': '4120094867', 'COMPANY_CODE__997': '2000', 'INCO_TERMS__997': 'CFR', 'SO_NUMBER__997': '2110111013', 'CUSTOMER_PO_DATE__997': datetime.datetime(2025, 1, 7, 0, 0), 'INCO_LOCATION__997': 'KHOPOLI', 'PLANT_CODE__998': '2010', 'SHIP_TO_PARTY__998': '0000106198', 'SO_VALUE__998': 3321.0, 'CUSTOMER_PO_NUMBER__998': '4120094878', 'PAYMENT_TERMS__998': 'EX01', 'CUSTOMER_CODE__998': '0000106198', 'SPECIAL_REMARK_BEMOT__998': '4120094878', 'COMPANY_CODE__998': '2000', 'INCO_TERMS__998': 'CFR', 'SO_NUMBER__998': '2110111038', 'CUSTOMER_PO_DATE__998': datetime.datetime(2025, 1, 7, 0, 0), 'INCO_LOCATION__998': 'KHOPOLI', 'PLANT_CODE__999': '2010', 'SHIP_TO_PARTY__999': '0000106198', 'SO_VALUE__999': 9581711.93, 'CUSTOMER_PO_NUMBER__999': '4120094327', 'PAYMENT_TERMS__999': 'X015', 'CUSTOMER_CODE__999': '0000106198', 'SPECIAL_REMARK_BEMOT__999': '4120094327', 'COMPANY_CODE__999': '2000', 'INCO_TERMS__999': 'CFR', 'SO_NUMBER__999': '2110109338', 'CUSTOMER_PO_DATE__999': datetime.datetime(2024, 12, 4, 0, 0), 'INCO_LOCATION__999': 'KHOPOLI'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+
+[2026-03-03 11:19:25,383] -- ERROR - sync_products_data.py -- insert_data - Line no - 179 -- Did not insert data --> Error --> SYNCING_ERROR_MAIL.html
+
+[2026-03-03 11:34:03,935] -- ERROR - sync_products_data.py -- insert_data - Line no - 155 -- EXCEPTION OCCURRED WHILE SYNCING SAP DATA WITH EMPLOYEE MASTER DATA
+
+[2026-03-03 11:34:03,935] -- ERROR - sync_products_data.py -- insert_data - Line no - 156 -- (psycopg2.errors.UndefinedColumn) column "PAYMENT_TERMS" of relation "MST_SODATA" does not exist
+LINE 1: ...E", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PAYMENT_T...
+                                                             ^
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PAYMENT_TERMS", "CUSTOMER_PO_NUMBER", "CUSTOMER_PO_DATE", "INCO_TERMS", "INCO_LOCATION", "SPECIAL_REMARK_BEMOT") VALUES (%(SO_NUMBER__ ... 287564 characters truncated ... CUSTOMER_PO_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s, %(SPECIAL_REMARK_BEMOT__999)s)]
+[parameters: {'PLANT_CODE__0': '2910', 'PAYMENT_TERMS__0': 'LCAS', 'CUSTOMER_PO_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'SO_NUMBER__0': '0210000780', 'COMPANY_CODE__0': '2900', 'SO_VALUE__0': 0.0, 'INCO_LOCATION__0': 'TANJUNG PRIOK', 'SHIP_TO_PARTY__0': '0002700160', 'SPECIAL_REMARK_BEMOT__0': '.', 'CUSTOMER_CODE__0': '0002700328', 'CUSTOMER_PO_NUMBER__0': '.', 'INCO_TERMS__0': 'EXW', 'PLANT_CODE__1': '2910', 'PAYMENT_TERMS__1': 'ADVN', 'CUSTOMER_PO_DATE__1': datetime.datetime(2026, 2, 28, 0, 0), 'SO_NUMBER__1': '0243002530', 'COMPANY_CODE__1': '2900', 'SO_VALUE__1': 3951486.64, 'INCO_LOCATION__1': 'PT. AM/NS Indonesia', 'SHIP_TO_PARTY__1': '0002502206', 'SPECIAL_REMARK_BEMOT__1': 'SECONDARY', 'CUSTOMER_CODE__1': '0002502206', 'CUSTOMER_PO_NUMBER__1': 'SECONDARY', 'INCO_TERMS__1': 'EXW', 'PLANT_CODE__2': '2910', 'PAYMENT_TERMS__2': 'ADV4', 'CUSTOMER_PO_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'SO_NUMBER__2': '0250005022', 'COMPANY_CODE__2': '2900', 'SO_VALUE__2': 3569650.0, 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'SHIP_TO_PARTY__2': '0002600757', 'SPECIAL_REMARK_BEMOT__2': '008/I/Nasco/2026', 'CUSTOMER_CODE__2': '0002500010', 'CUSTOMER_PO_NUMBER__2': '008/I/Nasco/2026', 'INCO_TERMS__2': 'DEL', 'PLANT_CODE__3': '2910', 'PAYMENT_TERMS__3': 'ADV4', 'CUSTOMER_PO_DATE__3': datetime.datetime(2026, 1, 28, 0, 0), 'SO_NUMBER__3': '0250005022', 'COMPANY_CODE__3': '2900', 'SO_VALUE__3': 3569650.0, 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'SHIP_TO_PARTY__3': '0002600757', 'SPECIAL_REMARK_BEMOT__3': '008/I/Nasco/2026', 'CUSTOMER_CODE__3': '0002500010', 'CUSTOMER_PO_NUMBER__3': '008/I/Nasco/2026', 'INCO_TERMS__3': 'DEL', 'PLANT_CODE__4': '2910', 'PAYMENT_TERMS__4': 'X000' ... 11900 parameters truncated ... 'CUSTOMER_PO_NUMBER__995': '4120094867', 'INCO_TERMS__995': 'CFR', 'PLANT_CODE__996': '2010', 'PAYMENT_TERMS__996': 'EX01', 'CUSTOMER_PO_DATE__996': datetime.datetime(2025, 1, 7, 0, 0), 'SO_NUMBER__996': '2110111012', 'COMPANY_CODE__996': '2000', 'SO_VALUE__996': 92.84, 'INCO_LOCATION__996': 'KHOPOLI', 'SHIP_TO_PARTY__996': '0000106198', 'SPECIAL_REMARK_BEMOT__996': '4120094867', 'CUSTOMER_CODE__996': '0000106198', 'CUSTOMER_PO_NUMBER__996': '4120094867', 'INCO_TERMS__996': 'CFR', 'PLANT_CODE__997': '2010', 'PAYMENT_TERMS__997': 'EX01', 'CUSTOMER_PO_DATE__997': datetime.datetime(2025, 1, 7, 0, 0), 'SO_NUMBER__997': '2110111013', 'COMPANY_CODE__997': '2000', 'SO_VALUE__997': 14030600.0, 'INCO_LOCATION__997': 'KHOPOLI', 'SHIP_TO_PARTY__997': '0000106198', 'SPECIAL_REMARK_BEMOT__997': '4120094867', 'CUSTOMER_CODE__997': '0000106198', 'CUSTOMER_PO_NUMBER__997': '4120094867', 'INCO_TERMS__997': 'CFR', 'PLANT_CODE__998': '2010', 'PAYMENT_TERMS__998': 'EX01', 'CUSTOMER_PO_DATE__998': datetime.datetime(2025, 1, 7, 0, 0), 'SO_NUMBER__998': '2110111038', 'COMPANY_CODE__998': '2000', 'SO_VALUE__998': 3321.0, 'INCO_LOCATION__998': 'KHOPOLI', 'SHIP_TO_PARTY__998': '0000106198', 'SPECIAL_REMARK_BEMOT__998': '4120094878', 'CUSTOMER_CODE__998': '0000106198', 'CUSTOMER_PO_NUMBER__998': '4120094878', 'INCO_TERMS__998': 'CFR', 'PLANT_CODE__999': '2010', 'PAYMENT_TERMS__999': 'X015', 'CUSTOMER_PO_DATE__999': datetime.datetime(2024, 12, 4, 0, 0), 'SO_NUMBER__999': '2110109338', 'COMPANY_CODE__999': '2000', 'SO_VALUE__999': 9581711.93, 'INCO_LOCATION__999': 'KHOPOLI', 'SHIP_TO_PARTY__999': '0000106198', 'SPECIAL_REMARK_BEMOT__999': '4120094327', 'CUSTOMER_CODE__999': '0000106198', 'CUSTOMER_PO_NUMBER__999': '4120094327', 'INCO_TERMS__999': 'CFR'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+[2026-03-03 11:34:03,938] -- ERROR - sync_products_data.py -- insert_data - Line no - 157 -- Traceback (most recent call last):
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.UndefinedColumn: column "PAYMENT_TERMS" of relation "MST_SODATA" does not exist
+LINE 1: ...E", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PAYMENT_T...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 152, in insert_data
+    data_df.to_sql('MST_SODATA', con=conn_postgres, index=False, if_exists='append')
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\util\_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\core\generic.py", line 3087, in to_sql
+    return sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 842, in to_sql
+    return pandas_sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 2018, in to_sql
+    total_inserted = sql_engine.insert_records(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1567, in insert_records
+    raise err
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1558, in insert_records
+    return table.insert(chunksize=chunksize, method=method)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1119, in insert
+    num_inserted = exec_insert(conn, keys, chunk_iter)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1010, in _execute_insert
+    result = conn.execute(self.table.insert(), data)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_insertmany_context(dialect, context)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2124, in _exec_insertmany_context
+    self._handle_dbapi_exception(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column "PAYMENT_TERMS" of relation "MST_SODATA" does not exist
+LINE 1: ...E", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PAYMENT_T...
+                                                             ^
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PAYMENT_TERMS", "CUSTOMER_PO_NUMBER", "CUSTOMER_PO_DATE", "INCO_TERMS", "INCO_LOCATION", "SPECIAL_REMARK_BEMOT") VALUES (%(SO_NUMBER__ ... 287564 characters truncated ... CUSTOMER_PO_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s, %(SPECIAL_REMARK_BEMOT__999)s)]
+[parameters: {'PLANT_CODE__0': '2910', 'PAYMENT_TERMS__0': 'LCAS', 'CUSTOMER_PO_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'SO_NUMBER__0': '0210000780', 'COMPANY_CODE__0': '2900', 'SO_VALUE__0': 0.0, 'INCO_LOCATION__0': 'TANJUNG PRIOK', 'SHIP_TO_PARTY__0': '0002700160', 'SPECIAL_REMARK_BEMOT__0': '.', 'CUSTOMER_CODE__0': '0002700328', 'CUSTOMER_PO_NUMBER__0': '.', 'INCO_TERMS__0': 'EXW', 'PLANT_CODE__1': '2910', 'PAYMENT_TERMS__1': 'ADVN', 'CUSTOMER_PO_DATE__1': datetime.datetime(2026, 2, 28, 0, 0), 'SO_NUMBER__1': '0243002530', 'COMPANY_CODE__1': '2900', 'SO_VALUE__1': 3951486.64, 'INCO_LOCATION__1': 'PT. AM/NS Indonesia', 'SHIP_TO_PARTY__1': '0002502206', 'SPECIAL_REMARK_BEMOT__1': 'SECONDARY', 'CUSTOMER_CODE__1': '0002502206', 'CUSTOMER_PO_NUMBER__1': 'SECONDARY', 'INCO_TERMS__1': 'EXW', 'PLANT_CODE__2': '2910', 'PAYMENT_TERMS__2': 'ADV4', 'CUSTOMER_PO_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'SO_NUMBER__2': '0250005022', 'COMPANY_CODE__2': '2900', 'SO_VALUE__2': 3569650.0, 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'SHIP_TO_PARTY__2': '0002600757', 'SPECIAL_REMARK_BEMOT__2': '008/I/Nasco/2026', 'CUSTOMER_CODE__2': '0002500010', 'CUSTOMER_PO_NUMBER__2': '008/I/Nasco/2026', 'INCO_TERMS__2': 'DEL', 'PLANT_CODE__3': '2910', 'PAYMENT_TERMS__3': 'ADV4', 'CUSTOMER_PO_DATE__3': datetime.datetime(2026, 1, 28, 0, 0), 'SO_NUMBER__3': '0250005022', 'COMPANY_CODE__3': '2900', 'SO_VALUE__3': 3569650.0, 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'SHIP_TO_PARTY__3': '0002600757', 'SPECIAL_REMARK_BEMOT__3': '008/I/Nasco/2026', 'CUSTOMER_CODE__3': '0002500010', 'CUSTOMER_PO_NUMBER__3': '008/I/Nasco/2026', 'INCO_TERMS__3': 'DEL', 'PLANT_CODE__4': '2910', 'PAYMENT_TERMS__4': 'X000' ... 11900 parameters truncated ... 'CUSTOMER_PO_NUMBER__995': '4120094867', 'INCO_TERMS__995': 'CFR', 'PLANT_CODE__996': '2010', 'PAYMENT_TERMS__996': 'EX01', 'CUSTOMER_PO_DATE__996': datetime.datetime(2025, 1, 7, 0, 0), 'SO_NUMBER__996': '2110111012', 'COMPANY_CODE__996': '2000', 'SO_VALUE__996': 92.84, 'INCO_LOCATION__996': 'KHOPOLI', 'SHIP_TO_PARTY__996': '0000106198', 'SPECIAL_REMARK_BEMOT__996': '4120094867', 'CUSTOMER_CODE__996': '0000106198', 'CUSTOMER_PO_NUMBER__996': '4120094867', 'INCO_TERMS__996': 'CFR', 'PLANT_CODE__997': '2010', 'PAYMENT_TERMS__997': 'EX01', 'CUSTOMER_PO_DATE__997': datetime.datetime(2025, 1, 7, 0, 0), 'SO_NUMBER__997': '2110111013', 'COMPANY_CODE__997': '2000', 'SO_VALUE__997': 14030600.0, 'INCO_LOCATION__997': 'KHOPOLI', 'SHIP_TO_PARTY__997': '0000106198', 'SPECIAL_REMARK_BEMOT__997': '4120094867', 'CUSTOMER_CODE__997': '0000106198', 'CUSTOMER_PO_NUMBER__997': '4120094867', 'INCO_TERMS__997': 'CFR', 'PLANT_CODE__998': '2010', 'PAYMENT_TERMS__998': 'EX01', 'CUSTOMER_PO_DATE__998': datetime.datetime(2025, 1, 7, 0, 0), 'SO_NUMBER__998': '2110111038', 'COMPANY_CODE__998': '2000', 'SO_VALUE__998': 3321.0, 'INCO_LOCATION__998': 'KHOPOLI', 'SHIP_TO_PARTY__998': '0000106198', 'SPECIAL_REMARK_BEMOT__998': '4120094878', 'CUSTOMER_CODE__998': '0000106198', 'CUSTOMER_PO_NUMBER__998': '4120094878', 'INCO_TERMS__998': 'CFR', 'PLANT_CODE__999': '2010', 'PAYMENT_TERMS__999': 'X015', 'CUSTOMER_PO_DATE__999': datetime.datetime(2024, 12, 4, 0, 0), 'SO_NUMBER__999': '2110109338', 'COMPANY_CODE__999': '2000', 'SO_VALUE__999': 9581711.93, 'INCO_LOCATION__999': 'KHOPOLI', 'SHIP_TO_PARTY__999': '0000106198', 'SPECIAL_REMARK_BEMOT__999': '4120094327', 'CUSTOMER_CODE__999': '0000106198', 'CUSTOMER_PO_NUMBER__999': '4120094327', 'INCO_TERMS__999': 'CFR'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+
+[2026-03-03 11:34:03,948] -- ERROR - sync_products_data.py -- insert_data - Line no - 179 -- Did not insert data --> Error --> SYNCING_ERROR_MAIL.html
+
+[2026-03-03 11:38:55,024] -- ERROR - sync_products_data.py -- insert_data - Line no - 154 -- EXCEPTION OCCURRED WHILE SYNCING SAP DATA WITH EMPLOYEE MASTER DATA
+
+[2026-03-03 11:38:55,025] -- ERROR - sync_products_data.py -- insert_data - Line no - 155 -- (psycopg2.errors.UndefinedColumn) column "CUSTOMER_REFERENCE" of relation "MST_SODATA" does not exist
+LINE 1: ..._CODE", "SHIP_TO_PARTY", "SO_VALUE", "PYT_TERMS", "CUSTOMER_...
+                                                             ^
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PYT_TERMS", "CUSTOMER_REFERENCE", "CUSTOMER_REFERENCE_DATE", "INCO_TERMS", "INCO_LOCATION") VALUES (%(SO_NUMBER__0)s, %(COMPANY_CODE__ ... 259653 characters truncated ... MER_REFERENCE__999)s, %(CUSTOMER_REFERENCE_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s)]
+[parameters: {'COMPANY_CODE__0': '2900', 'CUSTOMER_REFERENCE__0': '.', 'INCO_TERMS__0': 'EXW', 'INCO_LOCATION__0': 'TANJUNG PRIOK', 'CUSTOMER_CODE__0': '0002700328', 'SO_VALUE__0': 0.0, 'SO_NUMBER__0': '0210000780', 'PLANT_CODE__0': '2910', 'PYT_TERMS__0': 'LCAS', 'CUSTOMER_REFERENCE_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'SHIP_TO_PARTY__0': '0002700160', 'COMPANY_CODE__1': '2900', 'CUSTOMER_REFERENCE__1': 'SECONDARY', 'INCO_TERMS__1': 'EXW', 'INCO_LOCATION__1': 'PT. AM/NS Indonesia', 'CUSTOMER_CODE__1': '0002502206', 'SO_VALUE__1': 3951486.64, 'SO_NUMBER__1': '0243002530', 'PLANT_CODE__1': '2910', 'PYT_TERMS__1': 'ADVN', 'CUSTOMER_REFERENCE_DATE__1': datetime.datetime(2026, 2, 28, 0, 0), 'SHIP_TO_PARTY__1': '0002502206', 'COMPANY_CODE__2': '2900', 'CUSTOMER_REFERENCE__2': '008/I/Nasco/2026', 'INCO_TERMS__2': 'DEL', 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'CUSTOMER_CODE__2': '0002500010', 'SO_VALUE__2': 3569650.0, 'SO_NUMBER__2': '0250005022', 'PLANT_CODE__2': '2910', 'PYT_TERMS__2': 'ADV4', 'CUSTOMER_REFERENCE_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'SHIP_TO_PARTY__2': '0002600757', 'COMPANY_CODE__3': '2900', 'CUSTOMER_REFERENCE__3': '008/I/Nasco/2026', 'INCO_TERMS__3': 'DEL', 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'CUSTOMER_CODE__3': '0002500010', 'SO_VALUE__3': 3569650.0, 'SO_NUMBER__3': '0250005022', 'PLANT_CODE__3': '2910', 'PYT_TERMS__3': 'ADV4', 'CUSTOMER_REFERENCE_DATE__3': datetime.datetime(2026, 1, 28, 0, 0), 'SHIP_TO_PARTY__3': '0002600757', 'COMPANY_CODE__4': '2900', 'CUSTOMER_REFERENCE__4': '.', 'INCO_TERMS__4': 'CFR', 'INCO_LOCATION__4': 'TANJUNG PRIOK', 'CUSTOMER_CODE__4': '0002700139', 'SO_VALUE__4': 0.0 ... 10900 parameters truncated ... 'SO_VALUE__995': 10716000.0, 'SO_NUMBER__995': '2110111011', 'PLANT_CODE__995': '2010', 'PYT_TERMS__995': 'X015', 'CUSTOMER_REFERENCE_DATE__995': datetime.datetime(2025, 1, 7, 0, 0), 'SHIP_TO_PARTY__995': '0000106198', 'COMPANY_CODE__996': '2000', 'CUSTOMER_REFERENCE__996': '4120094867', 'INCO_TERMS__996': 'CFR', 'INCO_LOCATION__996': 'KHOPOLI', 'CUSTOMER_CODE__996': '0000106198', 'SO_VALUE__996': 92.84, 'SO_NUMBER__996': '2110111012', 'PLANT_CODE__996': '2010', 'PYT_TERMS__996': 'EX01', 'CUSTOMER_REFERENCE_DATE__996': datetime.datetime(2025, 1, 7, 0, 0), 'SHIP_TO_PARTY__996': '0000106198', 'COMPANY_CODE__997': '2000', 'CUSTOMER_REFERENCE__997': '4120094867', 'INCO_TERMS__997': 'CFR', 'INCO_LOCATION__997': 'KHOPOLI', 'CUSTOMER_CODE__997': '0000106198', 'SO_VALUE__997': 14030600.0, 'SO_NUMBER__997': '2110111013', 'PLANT_CODE__997': '2010', 'PYT_TERMS__997': 'EX01', 'CUSTOMER_REFERENCE_DATE__997': datetime.datetime(2025, 1, 7, 0, 0), 'SHIP_TO_PARTY__997': '0000106198', 'COMPANY_CODE__998': '2000', 'CUSTOMER_REFERENCE__998': '4120094878', 'INCO_TERMS__998': 'CFR', 'INCO_LOCATION__998': 'KHOPOLI', 'CUSTOMER_CODE__998': '0000106198', 'SO_VALUE__998': 3321.0, 'SO_NUMBER__998': '2110111038', 'PLANT_CODE__998': '2010', 'PYT_TERMS__998': 'EX01', 'CUSTOMER_REFERENCE_DATE__998': datetime.datetime(2025, 1, 7, 0, 0), 'SHIP_TO_PARTY__998': '0000106198', 'COMPANY_CODE__999': '2000', 'CUSTOMER_REFERENCE__999': '4120094327', 'INCO_TERMS__999': 'CFR', 'INCO_LOCATION__999': 'KHOPOLI', 'CUSTOMER_CODE__999': '0000106198', 'SO_VALUE__999': 9581711.93, 'SO_NUMBER__999': '2110109338', 'PLANT_CODE__999': '2010', 'PYT_TERMS__999': 'X015', 'CUSTOMER_REFERENCE_DATE__999': datetime.datetime(2024, 12, 4, 0, 0), 'SHIP_TO_PARTY__999': '0000106198'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+[2026-03-03 11:38:55,033] -- ERROR - sync_products_data.py -- insert_data - Line no - 156 -- Traceback (most recent call last):
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.UndefinedColumn: column "CUSTOMER_REFERENCE" of relation "MST_SODATA" does not exist
+LINE 1: ..._CODE", "SHIP_TO_PARTY", "SO_VALUE", "PYT_TERMS", "CUSTOMER_...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 151, in insert_data
+    data_df.to_sql('MST_SODATA', con=conn_postgres, index=False, if_exists='append')
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\util\_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\core\generic.py", line 3087, in to_sql
+    return sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 842, in to_sql
+    return pandas_sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 2018, in to_sql
+    total_inserted = sql_engine.insert_records(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1567, in insert_records
+    raise err
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1558, in insert_records
+    return table.insert(chunksize=chunksize, method=method)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1119, in insert
+    num_inserted = exec_insert(conn, keys, chunk_iter)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1010, in _execute_insert
+    result = conn.execute(self.table.insert(), data)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_insertmany_context(dialect, context)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2124, in _exec_insertmany_context
+    self._handle_dbapi_exception(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column "CUSTOMER_REFERENCE" of relation "MST_SODATA" does not exist
+LINE 1: ..._CODE", "SHIP_TO_PARTY", "SO_VALUE", "PYT_TERMS", "CUSTOMER_...
+                                                             ^
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PYT_TERMS", "CUSTOMER_REFERENCE", "CUSTOMER_REFERENCE_DATE", "INCO_TERMS", "INCO_LOCATION") VALUES (%(SO_NUMBER__0)s, %(COMPANY_CODE__ ... 259653 characters truncated ... MER_REFERENCE__999)s, %(CUSTOMER_REFERENCE_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s)]
+[parameters: {'COMPANY_CODE__0': '2900', 'CUSTOMER_REFERENCE__0': '.', 'INCO_TERMS__0': 'EXW', 'INCO_LOCATION__0': 'TANJUNG PRIOK', 'CUSTOMER_CODE__0': '0002700328', 'SO_VALUE__0': 0.0, 'SO_NUMBER__0': '0210000780', 'PLANT_CODE__0': '2910', 'PYT_TERMS__0': 'LCAS', 'CUSTOMER_REFERENCE_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'SHIP_TO_PARTY__0': '0002700160', 'COMPANY_CODE__1': '2900', 'CUSTOMER_REFERENCE__1': 'SECONDARY', 'INCO_TERMS__1': 'EXW', 'INCO_LOCATION__1': 'PT. AM/NS Indonesia', 'CUSTOMER_CODE__1': '0002502206', 'SO_VALUE__1': 3951486.64, 'SO_NUMBER__1': '0243002530', 'PLANT_CODE__1': '2910', 'PYT_TERMS__1': 'ADVN', 'CUSTOMER_REFERENCE_DATE__1': datetime.datetime(2026, 2, 28, 0, 0), 'SHIP_TO_PARTY__1': '0002502206', 'COMPANY_CODE__2': '2900', 'CUSTOMER_REFERENCE__2': '008/I/Nasco/2026', 'INCO_TERMS__2': 'DEL', 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'CUSTOMER_CODE__2': '0002500010', 'SO_VALUE__2': 3569650.0, 'SO_NUMBER__2': '0250005022', 'PLANT_CODE__2': '2910', 'PYT_TERMS__2': 'ADV4', 'CUSTOMER_REFERENCE_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'SHIP_TO_PARTY__2': '0002600757', 'COMPANY_CODE__3': '2900', 'CUSTOMER_REFERENCE__3': '008/I/Nasco/2026', 'INCO_TERMS__3': 'DEL', 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'CUSTOMER_CODE__3': '0002500010', 'SO_VALUE__3': 3569650.0, 'SO_NUMBER__3': '0250005022', 'PLANT_CODE__3': '2910', 'PYT_TERMS__3': 'ADV4', 'CUSTOMER_REFERENCE_DATE__3': datetime.datetime(2026, 1, 28, 0, 0), 'SHIP_TO_PARTY__3': '0002600757', 'COMPANY_CODE__4': '2900', 'CUSTOMER_REFERENCE__4': '.', 'INCO_TERMS__4': 'CFR', 'INCO_LOCATION__4': 'TANJUNG PRIOK', 'CUSTOMER_CODE__4': '0002700139', 'SO_VALUE__4': 0.0 ... 10900 parameters truncated ... 'SO_VALUE__995': 10716000.0, 'SO_NUMBER__995': '2110111011', 'PLANT_CODE__995': '2010', 'PYT_TERMS__995': 'X015', 'CUSTOMER_REFERENCE_DATE__995': datetime.datetime(2025, 1, 7, 0, 0), 'SHIP_TO_PARTY__995': '0000106198', 'COMPANY_CODE__996': '2000', 'CUSTOMER_REFERENCE__996': '4120094867', 'INCO_TERMS__996': 'CFR', 'INCO_LOCATION__996': 'KHOPOLI', 'CUSTOMER_CODE__996': '0000106198', 'SO_VALUE__996': 92.84, 'SO_NUMBER__996': '2110111012', 'PLANT_CODE__996': '2010', 'PYT_TERMS__996': 'EX01', 'CUSTOMER_REFERENCE_DATE__996': datetime.datetime(2025, 1, 7, 0, 0), 'SHIP_TO_PARTY__996': '0000106198', 'COMPANY_CODE__997': '2000', 'CUSTOMER_REFERENCE__997': '4120094867', 'INCO_TERMS__997': 'CFR', 'INCO_LOCATION__997': 'KHOPOLI', 'CUSTOMER_CODE__997': '0000106198', 'SO_VALUE__997': 14030600.0, 'SO_NUMBER__997': '2110111013', 'PLANT_CODE__997': '2010', 'PYT_TERMS__997': 'EX01', 'CUSTOMER_REFERENCE_DATE__997': datetime.datetime(2025, 1, 7, 0, 0), 'SHIP_TO_PARTY__997': '0000106198', 'COMPANY_CODE__998': '2000', 'CUSTOMER_REFERENCE__998': '4120094878', 'INCO_TERMS__998': 'CFR', 'INCO_LOCATION__998': 'KHOPOLI', 'CUSTOMER_CODE__998': '0000106198', 'SO_VALUE__998': 3321.0, 'SO_NUMBER__998': '2110111038', 'PLANT_CODE__998': '2010', 'PYT_TERMS__998': 'EX01', 'CUSTOMER_REFERENCE_DATE__998': datetime.datetime(2025, 1, 7, 0, 0), 'SHIP_TO_PARTY__998': '0000106198', 'COMPANY_CODE__999': '2000', 'CUSTOMER_REFERENCE__999': '4120094327', 'INCO_TERMS__999': 'CFR', 'INCO_LOCATION__999': 'KHOPOLI', 'CUSTOMER_CODE__999': '0000106198', 'SO_VALUE__999': 9581711.93, 'SO_NUMBER__999': '2110109338', 'PLANT_CODE__999': '2010', 'PYT_TERMS__999': 'X015', 'CUSTOMER_REFERENCE_DATE__999': datetime.datetime(2024, 12, 4, 0, 0), 'SHIP_TO_PARTY__999': '0000106198'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+
+[2026-03-03 11:38:55,038] -- ERROR - sync_products_data.py -- insert_data - Line no - 178 -- Did not insert data --> Error --> SYNCING_ERROR_MAIL.html
+

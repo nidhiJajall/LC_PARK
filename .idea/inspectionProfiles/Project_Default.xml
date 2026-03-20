@@ -1,0 +1,62 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="Eslint" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="certifi" />
+          <option value="cffi" />
+          <option value="chardet" />
+          <option value="coreapi" />
+          <option value="coreschema" />
+          <option value="cryptography" />
+          <option value="cx-Oracle" />
+          <option value="deepdiff" />
+          <option value="django-cors-headers" />
+          <option value="django-filter" />
+          <option value="django-multiselectfield" />
+          <option value="django-rest-swagger" />
+          <option value="django-reversion" />
+          <option value="djangorestframework" />
+          <option value="drf-yasg" />
+          <option value="et-xmlfile" />
+          <option value="idna" />
+          <option value="inflection" />
+          <option value="itypes" />
+          <option value="jdcal" />
+          <option value="Jinja2" />
+          <option value="jsonpickle" />
+          <option value="ldap3" />
+          <option value="MarkupSafe" />
+          <option value="ntlm-auth" />
+          <option value="numpy" />
+          <option value="openapi-codec" />
+          <option value="openpyxl" />
+          <option value="ordered-set" />
+          <option value="packaging" />
+          <option value="pandas" />
+          <option value="pika" />
+          <option value="psycopg2" />
+          <option value="pyasn1" />
+          <option value="pycparser" />
+          <option value="pyparsing" />
+          <option value="python-dateutil" />
+          <option value="pytz" />
+          <option value="RandomWords" />
+          <option value="requests" />
+          <option value="requests-ntlm" />
+          <option value="ruamel.yaml" />
+          <option value="simplejson" />
+          <option value="six" />
+          <option value="uritemplate" />
+          <option value="urllib3" />
+          <option value="whitenoise" />
+          <option value="wincertstore" />
+          <option value="xlrd" />
+          <option value="api" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

@@ -1,0 +1,18 @@
+[2026-02-24 09:40:02,625] -- INFO - sync_products_data.py -- insert_data - Line no - 101 -- CONNECTING ORACLE DB
+
+[2026-02-24 09:40:02,627] -- INFO - sync_products_data.py -- db_connection - Line no - 65 -- Initializing oracle Database connection --> 10.165.1.21:1542
+
+[2026-02-24 10:14:53,289] -- INFO - sync_products_data.py -- insert_data - Line no - 101 -- CONNECTING ORACLE DB
+
+[2026-02-24 10:14:53,289] -- INFO - sync_products_data.py -- db_connection - Line no - 65 -- Initializing oracle Database connection --> 10.165.1.21:1542
+
+[2026-02-24 10:14:53,600] -- INFO - sync_products_data.py -- insert_data - Line no - 104 -- ORACLE Connection String : <sqlalchemy.engine.base.Connection object at 0x0000021F05B64AC0>
+
+[2026-02-24 10:14:53,631] -- INFO - sync_products_data.py -- insert_data - Line no - 106 -- CONNECTING POSTGRES DB
+
+[2026-02-24 10:14:53,673] -- INFO - sync_products_data.py -- db_connection - Line no - 79 -- Initializing postgres Database connection --> localhost:5432
+
+[2026-02-24 10:14:53,805] -- INFO - sync_products_data.py -- insert_data - Line no - 109 -- Postgres Connection String : <sqlalchemy.engine.base.Connection object at 0x0000021F05D1E380>
+
+[2026-02-24 10:14:53,806] -- INFO - sync_products_data.py -- insert_data - Line no - 111 -- INSERTING DATA IN POSTGRES DB
+

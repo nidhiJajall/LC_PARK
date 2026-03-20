@@ -1,0 +1,38 @@
+[2026-02-20 09:42:29,826] -- INFO - decorators.py -- wrap - Line no - 90 -- Data by POST for Incoming Login Request by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 09:42:40,801] -- INFO - views.py -- post - Line no - 684 -- Token Successful for user -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 11:39:54,066] -- INFO - decorators.py -- wrap - Line no - 71 --  GET by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 11:42:13,821] -- INFO - decorators.py -- wrap - Line no - 71 --  POST by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 11:42:29,756] -- INFO - decorators.py -- wrap - Line no - 71 --  POST by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 11:57:42,019] -- INFO - decorators.py -- wrap - Line no - 71 --  GET by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 11:58:05,032] -- INFO - decorators.py -- wrap - Line no - 71 --  GET by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 12:01:36,964] -- INFO - decorators.py -- wrap - Line no - 71 --  GET by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 12:01:41,843] -- INFO - decorators.py -- wrap - Line no - 71 --  GET by -- admin -- IP -- 127.0.0.1
+
+[2026-02-20 12:08:25,529] -- INFO - decorators.py -- wrap - Line no - 71 --  GET by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 12:13:23,535] -- INFO - decorators.py -- wrap - Line no - 71 --  GET by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 12:15:50,109] -- INFO - decorators.py -- wrap - Line no - 71 --  POST by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 12:16:13,941] -- INFO - decorators.py -- wrap - Line no - 71 --  GET by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 12:16:18,501] -- INFO - decorators.py -- wrap - Line no - 71 --  GET by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 12:18:14,524] -- INFO - decorators.py -- wrap - Line no - 71 --  POST by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 12:20:02,152] -- INFO - decorators.py -- wrap - Line no - 71 --  POST by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 12:20:39,821] -- INFO - decorators.py -- wrap - Line no - 71 --  POST by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 12:22:15,549] -- INFO - decorators.py -- wrap - Line no - 71 --  POST by -- njajal -- IP -- 127.0.0.1
+
+[2026-02-20 14:21:57,797] -- INFO - decorators.py -- wrap - Line no - 71 --  GET by -- njajal -- IP -- 127.0.0.1
+

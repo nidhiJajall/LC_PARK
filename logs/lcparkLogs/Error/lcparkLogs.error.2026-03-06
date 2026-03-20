@@ -1,0 +1,628 @@
+[2026-03-05 09:06:50,014] -- ERROR - sync_products_data.py -- db_connection - Line no - 91 -- Did not insert data --> Error --> (cx_Oracle.DatabaseError) ORA-12170: TNS:Connect timeout occurred
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+
+[2026-03-05 09:06:50,014] -- ERROR - sync_products_data.py -- insert_data - Line no - 154 -- EXCEPTION OCCURRED WHILE SYNCING SAP DATA WITH EMPLOYEE MASTER DATA
+
+[2026-03-05 09:06:50,014] -- ERROR - sync_products_data.py -- insert_data - Line no - 155 -- (cx_Oracle.DatabaseError) ORA-12170: TNS:Connect timeout occurred
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+
+[2026-03-05 09:06:50,029] -- ERROR - sync_products_data.py -- insert_data - Line no - 156 -- Traceback (most recent call last):
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 3300, in raw_connection
+    return self.pool.connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 1263, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 179, in _do_get
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    return self._create_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 390, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 620, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+cx_Oracle.DatabaseError: ORA-12170: TNS:Connect timeout occurred
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 103, in insert_data
+    self.db_connection(database_credentials_oracle, database_type_oracle)
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 92, in db_connection
+    raise ex
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 88, in db_connection
+    conn = engine_bf.connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 3276, in connect
+    return self._connection_cls(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 148, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2440, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 3300, in raw_connection
+    return self.pool.connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 1263, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 179, in _do_get
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    return self._create_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 390, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 620, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+sqlalchemy.exc.DatabaseError: (cx_Oracle.DatabaseError) ORA-12170: TNS:Connect timeout occurred
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+
+
+[2026-03-05 09:06:50,045] -- ERROR - sync_products_data.py -- insert_data - Line no - 178 -- Did not insert data --> Error --> SYNCING_ERROR_MAIL.html
+
+[2026-03-05 09:19:17,853] -- ERROR - sync_products_data.py -- insert_data - Line no - 154 -- EXCEPTION OCCURRED WHILE SYNCING SAP DATA WITH EMPLOYEE MASTER DATA
+
+[2026-03-05 09:19:17,860] -- ERROR - sync_products_data.py -- insert_data - Line no - 155 -- (psycopg2.errors.NotNullViolation) null value in column "IS_APPROVED" of relation "MST_SODATA" violates not-null constraint
+DETAIL:  Failing row contains (null, null, null, null, null, null, null, 2, 2900, 2910, 0002700328, 0002700160, 0.00, LCAS, null, ., 2026-02-28, EXW, TANJUNG PRIOK, null, 0210000780).
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PYT_TERMS", "CUST_REFERENCE", "CUST_REFERENCE_DATE", "INCO_TERMS", "INCO_LOCATION") VALUES (%(SO_NUMBER__0)s, %(COMPANY_CODE__0)s, %(P ... 251645 characters truncated ...  %(CUST_REFERENCE__999)s, %(CUST_REFERENCE_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s)]
+[parameters: {'PLANT_CODE__0': '2910', 'SHIP_TO_PARTY__0': '0002700160', 'PYT_TERMS__0': 'LCAS', 'COMPANY_CODE__0': '2900', 'CUST_REFERENCE_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_LOCATION__0': 'TANJUNG PRIOK', 'CUST_REFERENCE__0': '.', 'SO_NUMBER__0': '0210000780', 'CUSTOMER_CODE__0': '0002700328', 'SO_VALUE__0': 0.0, 'INCO_TERMS__0': 'EXW', 'PLANT_CODE__1': '2910', 'SHIP_TO_PARTY__1': '0002502206', 'PYT_TERMS__1': 'ADVN', 'COMPANY_CODE__1': '2900', 'CUST_REFERENCE_DATE__1': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_LOCATION__1': 'PT. AM/NS Indonesia', 'CUST_REFERENCE__1': 'SECONDARY', 'SO_NUMBER__1': '0243002530', 'CUSTOMER_CODE__1': '0002502206', 'SO_VALUE__1': 3951486.64, 'INCO_TERMS__1': 'EXW', 'PLANT_CODE__2': '2910', 'SHIP_TO_PARTY__2': '0002600757', 'PYT_TERMS__2': 'ADV4', 'COMPANY_CODE__2': '2900', 'CUST_REFERENCE_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'CUST_REFERENCE__2': '008/I/Nasco/2026', 'SO_NUMBER__2': '0250005022', 'CUSTOMER_CODE__2': '0002500010', 'SO_VALUE__2': 3569650.0, 'INCO_TERMS__2': 'DEL', 'PLANT_CODE__3': '2910', 'SHIP_TO_PARTY__3': '0002600757', 'PYT_TERMS__3': 'ADV4', 'COMPANY_CODE__3': '2900', 'CUST_REFERENCE_DATE__3': datetime.datetime(2026, 1, 28, 0, 0), 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'CUST_REFERENCE__3': '008/I/Nasco/2026', 'SO_NUMBER__3': '0250005022', 'CUSTOMER_CODE__3': '0002500010', 'SO_VALUE__3': 3569650.0, 'INCO_TERMS__3': 'DEL', 'PLANT_CODE__4': '2910', 'SHIP_TO_PARTY__4': '0002700160', 'PYT_TERMS__4': 'X000', 'COMPANY_CODE__4': '2900', 'CUST_REFERENCE_DATE__4': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_LOCATION__4': 'TANJUNG PRIOK' ... 10900 parameters truncated ... 'INCO_LOCATION__995': 'KHOPOLI', 'CUST_REFERENCE__995': 'Sep CN', 'SO_NUMBER__995': '0002037864', 'CUSTOMER_CODE__995': '0000106198', 'SO_VALUE__995': 138235.25, 'INCO_TERMS__995': 'CFR', 'PLANT_CODE__996': '2010', 'SHIP_TO_PARTY__996': '0000106198', 'PYT_TERMS__996': 'X015', 'COMPANY_CODE__996': '2000', 'CUST_REFERENCE_DATE__996': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_LOCATION__996': 'KHOPOLI', 'CUST_REFERENCE__996': 'Sep CN', 'SO_NUMBER__996': '0001098936', 'CUSTOMER_CODE__996': '0000106198', 'SO_VALUE__996': 34350075.0, 'INCO_TERMS__996': 'CFR', 'PLANT_CODE__997': '2010', 'SHIP_TO_PARTY__997': '0000106198', 'PYT_TERMS__997': 'X015', 'COMPANY_CODE__997': '2000', 'CUST_REFERENCE_DATE__997': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_LOCATION__997': 'KHOPOLI', 'CUST_REFERENCE__997': 'Sep CN', 'SO_NUMBER__997': '0001098996', 'CUSTOMER_CODE__997': '0000106198', 'SO_VALUE__997': 2093276.0, 'INCO_TERMS__997': 'CFR', 'PLANT_CODE__998': '2010', 'SHIP_TO_PARTY__998': '0000106198', 'PYT_TERMS__998': 'X015', 'COMPANY_CODE__998': '2000', 'CUST_REFERENCE_DATE__998': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_LOCATION__998': 'KHOPOLI', 'CUST_REFERENCE__998': 'Sep CN', 'SO_NUMBER__998': '0001098997', 'CUSTOMER_CODE__998': '0000106198', 'SO_VALUE__998': 69616.25, 'INCO_TERMS__998': 'CFR', 'PLANT_CODE__999': '2010', 'SHIP_TO_PARTY__999': '0000106198', 'PYT_TERMS__999': 'X015', 'COMPANY_CODE__999': '2000', 'CUST_REFERENCE_DATE__999': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_LOCATION__999': 'KHOPOLI', 'CUST_REFERENCE__999': 'Sep CN', 'SO_NUMBER__999': '0001098998', 'CUSTOMER_CODE__999': '0000106198', 'SO_VALUE__999': 47430656.75, 'INCO_TERMS__999': 'CFR'}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+[2026-03-05 09:19:17,876] -- ERROR - sync_products_data.py -- insert_data - Line no - 156 -- Traceback (most recent call last):
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.NotNullViolation: null value in column "IS_APPROVED" of relation "MST_SODATA" violates not-null constraint
+DETAIL:  Failing row contains (null, null, null, null, null, null, null, 2, 2900, 2910, 0002700328, 0002700160, 0.00, LCAS, null, ., 2026-02-28, EXW, TANJUNG PRIOK, null, 0210000780).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 151, in insert_data
+    data_df.to_sql('MST_SODATA', con=conn_postgres, index=False, if_exists='append')
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\util\_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\core\generic.py", line 3087, in to_sql
+    return sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 842, in to_sql
+    return pandas_sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 2018, in to_sql
+    total_inserted = sql_engine.insert_records(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1567, in insert_records
+    raise err
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1558, in insert_records
+    return table.insert(chunksize=chunksize, method=method)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1119, in insert
+    num_inserted = exec_insert(conn, keys, chunk_iter)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1010, in _execute_insert
+    result = conn.execute(self.table.insert(), data)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_insertmany_context(dialect, context)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2124, in _exec_insertmany_context
+    self._handle_dbapi_exception(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (psycopg2.errors.NotNullViolation) null value in column "IS_APPROVED" of relation "MST_SODATA" violates not-null constraint
+DETAIL:  Failing row contains (null, null, null, null, null, null, null, 2, 2900, 2910, 0002700328, 0002700160, 0.00, LCAS, null, ., 2026-02-28, EXW, TANJUNG PRIOK, null, 0210000780).
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PYT_TERMS", "CUST_REFERENCE", "CUST_REFERENCE_DATE", "INCO_TERMS", "INCO_LOCATION") VALUES (%(SO_NUMBER__0)s, %(COMPANY_CODE__0)s, %(P ... 251645 characters truncated ...  %(CUST_REFERENCE__999)s, %(CUST_REFERENCE_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s)]
+[parameters: {'PLANT_CODE__0': '2910', 'SHIP_TO_PARTY__0': '0002700160', 'PYT_TERMS__0': 'LCAS', 'COMPANY_CODE__0': '2900', 'CUST_REFERENCE_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_LOCATION__0': 'TANJUNG PRIOK', 'CUST_REFERENCE__0': '.', 'SO_NUMBER__0': '0210000780', 'CUSTOMER_CODE__0': '0002700328', 'SO_VALUE__0': 0.0, 'INCO_TERMS__0': 'EXW', 'PLANT_CODE__1': '2910', 'SHIP_TO_PARTY__1': '0002502206', 'PYT_TERMS__1': 'ADVN', 'COMPANY_CODE__1': '2900', 'CUST_REFERENCE_DATE__1': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_LOCATION__1': 'PT. AM/NS Indonesia', 'CUST_REFERENCE__1': 'SECONDARY', 'SO_NUMBER__1': '0243002530', 'CUSTOMER_CODE__1': '0002502206', 'SO_VALUE__1': 3951486.64, 'INCO_TERMS__1': 'EXW', 'PLANT_CODE__2': '2910', 'SHIP_TO_PARTY__2': '0002600757', 'PYT_TERMS__2': 'ADV4', 'COMPANY_CODE__2': '2900', 'CUST_REFERENCE_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'CUST_REFERENCE__2': '008/I/Nasco/2026', 'SO_NUMBER__2': '0250005022', 'CUSTOMER_CODE__2': '0002500010', 'SO_VALUE__2': 3569650.0, 'INCO_TERMS__2': 'DEL', 'PLANT_CODE__3': '2910', 'SHIP_TO_PARTY__3': '0002600757', 'PYT_TERMS__3': 'ADV4', 'COMPANY_CODE__3': '2900', 'CUST_REFERENCE_DATE__3': datetime.datetime(2026, 1, 28, 0, 0), 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'CUST_REFERENCE__3': '008/I/Nasco/2026', 'SO_NUMBER__3': '0250005022', 'CUSTOMER_CODE__3': '0002500010', 'SO_VALUE__3': 3569650.0, 'INCO_TERMS__3': 'DEL', 'PLANT_CODE__4': '2910', 'SHIP_TO_PARTY__4': '0002700160', 'PYT_TERMS__4': 'X000', 'COMPANY_CODE__4': '2900', 'CUST_REFERENCE_DATE__4': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_LOCATION__4': 'TANJUNG PRIOK' ... 10900 parameters truncated ... 'INCO_LOCATION__995': 'KHOPOLI', 'CUST_REFERENCE__995': 'Sep CN', 'SO_NUMBER__995': '0002037864', 'CUSTOMER_CODE__995': '0000106198', 'SO_VALUE__995': 138235.25, 'INCO_TERMS__995': 'CFR', 'PLANT_CODE__996': '2010', 'SHIP_TO_PARTY__996': '0000106198', 'PYT_TERMS__996': 'X015', 'COMPANY_CODE__996': '2000', 'CUST_REFERENCE_DATE__996': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_LOCATION__996': 'KHOPOLI', 'CUST_REFERENCE__996': 'Sep CN', 'SO_NUMBER__996': '0001098936', 'CUSTOMER_CODE__996': '0000106198', 'SO_VALUE__996': 34350075.0, 'INCO_TERMS__996': 'CFR', 'PLANT_CODE__997': '2010', 'SHIP_TO_PARTY__997': '0000106198', 'PYT_TERMS__997': 'X015', 'COMPANY_CODE__997': '2000', 'CUST_REFERENCE_DATE__997': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_LOCATION__997': 'KHOPOLI', 'CUST_REFERENCE__997': 'Sep CN', 'SO_NUMBER__997': '0001098996', 'CUSTOMER_CODE__997': '0000106198', 'SO_VALUE__997': 2093276.0, 'INCO_TERMS__997': 'CFR', 'PLANT_CODE__998': '2010', 'SHIP_TO_PARTY__998': '0000106198', 'PYT_TERMS__998': 'X015', 'COMPANY_CODE__998': '2000', 'CUST_REFERENCE_DATE__998': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_LOCATION__998': 'KHOPOLI', 'CUST_REFERENCE__998': 'Sep CN', 'SO_NUMBER__998': '0001098997', 'CUSTOMER_CODE__998': '0000106198', 'SO_VALUE__998': 69616.25, 'INCO_TERMS__998': 'CFR', 'PLANT_CODE__999': '2010', 'SHIP_TO_PARTY__999': '0000106198', 'PYT_TERMS__999': 'X015', 'COMPANY_CODE__999': '2000', 'CUST_REFERENCE_DATE__999': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_LOCATION__999': 'KHOPOLI', 'CUST_REFERENCE__999': 'Sep CN', 'SO_NUMBER__999': '0001098998', 'CUSTOMER_CODE__999': '0000106198', 'SO_VALUE__999': 47430656.75, 'INCO_TERMS__999': 'CFR'}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+
+[2026-03-05 09:19:17,886] -- ERROR - sync_products_data.py -- insert_data - Line no - 178 -- Did not insert data --> Error --> SYNCING_ERROR_MAIL.html
+
+[2026-03-05 09:38:00,092] -- ERROR - sync_products_data.py -- insert_data - Line no - 154 -- EXCEPTION OCCURRED WHILE SYNCING SAP DATA WITH EMPLOYEE MASTER DATA
+
+[2026-03-05 09:38:00,096] -- ERROR - sync_products_data.py -- insert_data - Line no - 155 -- (psycopg2.errors.NotNullViolation) null value in column "IS_APPROVED" of relation "MST_SODATA" violates not-null constraint
+DETAIL:  Failing row contains (null, null, null, null, null, null, null, 3, 2900, 2910, 0002700328, 0002700160, 0.00, LCAS, null, ., 2026-02-28, EXW, TANJUNG PRIOK, null, 0210000780).
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PYT_TERMS", "CUST_REFERENCE", "CUST_REFERENCE_DATE", "INCO_TERMS", "INCO_LOCATION") VALUES (%(SO_NUMBER__0)s, %(COMPANY_CODE__0)s, %(P ... 251645 characters truncated ...  %(CUST_REFERENCE__999)s, %(CUST_REFERENCE_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s)]
+[parameters: {'COMPANY_CODE__0': '2900', 'SHIP_TO_PARTY__0': '0002700160', 'SO_NUMBER__0': '0210000780', 'INCO_LOCATION__0': 'TANJUNG PRIOK', 'PYT_TERMS__0': 'LCAS', 'CUST_REFERENCE__0': '.', 'SO_VALUE__0': 0.0, 'CUST_REFERENCE_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_TERMS__0': 'EXW', 'PLANT_CODE__0': '2910', 'CUSTOMER_CODE__0': '0002700328', 'COMPANY_CODE__1': '2900', 'SHIP_TO_PARTY__1': '0002502206', 'SO_NUMBER__1': '0243002530', 'INCO_LOCATION__1': 'PT. AM/NS Indonesia', 'PYT_TERMS__1': 'ADVN', 'CUST_REFERENCE__1': 'SECONDARY', 'SO_VALUE__1': 3951486.64, 'CUST_REFERENCE_DATE__1': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_TERMS__1': 'EXW', 'PLANT_CODE__1': '2910', 'CUSTOMER_CODE__1': '0002502206', 'COMPANY_CODE__2': '2900', 'SHIP_TO_PARTY__2': '0002600757', 'SO_NUMBER__2': '0250005022', 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'PYT_TERMS__2': 'ADV4', 'CUST_REFERENCE__2': '008/I/Nasco/2026', 'SO_VALUE__2': 3569650.0, 'CUST_REFERENCE_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'INCO_TERMS__2': 'DEL', 'PLANT_CODE__2': '2910', 'CUSTOMER_CODE__2': '0002500010', 'COMPANY_CODE__3': '2900', 'SHIP_TO_PARTY__3': '0002600757', 'SO_NUMBER__3': '0250005022', 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'PYT_TERMS__3': 'ADV4', 'CUST_REFERENCE__3': '008/I/Nasco/2026', 'SO_VALUE__3': 3569650.0, 'CUST_REFERENCE_DATE__3': datetime.datetime(2026, 1, 28, 0, 0), 'INCO_TERMS__3': 'DEL', 'PLANT_CODE__3': '2910', 'CUSTOMER_CODE__3': '0002500010', 'COMPANY_CODE__4': '2900', 'SHIP_TO_PARTY__4': '0002700160', 'SO_NUMBER__4': '0250005104', 'INCO_LOCATION__4': 'TANJUNG PRIOK', 'PYT_TERMS__4': 'X000', 'CUST_REFERENCE__4': '.' ... 10900 parameters truncated ... 'CUST_REFERENCE__995': 'Sep CN', 'SO_VALUE__995': 138235.25, 'CUST_REFERENCE_DATE__995': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_TERMS__995': 'CFR', 'PLANT_CODE__995': '2010', 'CUSTOMER_CODE__995': '0000106198', 'COMPANY_CODE__996': '2000', 'SHIP_TO_PARTY__996': '0000106198', 'SO_NUMBER__996': '0001098936', 'INCO_LOCATION__996': 'KHOPOLI', 'PYT_TERMS__996': 'X015', 'CUST_REFERENCE__996': 'Sep CN', 'SO_VALUE__996': 34350075.0, 'CUST_REFERENCE_DATE__996': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_TERMS__996': 'CFR', 'PLANT_CODE__996': '2010', 'CUSTOMER_CODE__996': '0000106198', 'COMPANY_CODE__997': '2000', 'SHIP_TO_PARTY__997': '0000106198', 'SO_NUMBER__997': '0001098996', 'INCO_LOCATION__997': 'KHOPOLI', 'PYT_TERMS__997': 'X015', 'CUST_REFERENCE__997': 'Sep CN', 'SO_VALUE__997': 2093276.0, 'CUST_REFERENCE_DATE__997': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_TERMS__997': 'CFR', 'PLANT_CODE__997': '2010', 'CUSTOMER_CODE__997': '0000106198', 'COMPANY_CODE__998': '2000', 'SHIP_TO_PARTY__998': '0000106198', 'SO_NUMBER__998': '0001098997', 'INCO_LOCATION__998': 'KHOPOLI', 'PYT_TERMS__998': 'X015', 'CUST_REFERENCE__998': 'Sep CN', 'SO_VALUE__998': 69616.25, 'CUST_REFERENCE_DATE__998': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_TERMS__998': 'CFR', 'PLANT_CODE__998': '2010', 'CUSTOMER_CODE__998': '0000106198', 'COMPANY_CODE__999': '2000', 'SHIP_TO_PARTY__999': '0000106198', 'SO_NUMBER__999': '0001098998', 'INCO_LOCATION__999': 'KHOPOLI', 'PYT_TERMS__999': 'X015', 'CUST_REFERENCE__999': 'Sep CN', 'SO_VALUE__999': 47430656.75, 'CUST_REFERENCE_DATE__999': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_TERMS__999': 'CFR', 'PLANT_CODE__999': '2010', 'CUSTOMER_CODE__999': '0000106198'}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+[2026-03-05 09:38:00,114] -- ERROR - sync_products_data.py -- insert_data - Line no - 156 -- Traceback (most recent call last):
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.NotNullViolation: null value in column "IS_APPROVED" of relation "MST_SODATA" violates not-null constraint
+DETAIL:  Failing row contains (null, null, null, null, null, null, null, 3, 2900, 2910, 0002700328, 0002700160, 0.00, LCAS, null, ., 2026-02-28, EXW, TANJUNG PRIOK, null, 0210000780).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 151, in insert_data
+    data_df.to_sql('MST_SODATA', con=conn_postgres, index=False, if_exists='append')
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\util\_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\core\generic.py", line 3087, in to_sql
+    return sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 842, in to_sql
+    return pandas_sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 2018, in to_sql
+    total_inserted = sql_engine.insert_records(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1567, in insert_records
+    raise err
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1558, in insert_records
+    return table.insert(chunksize=chunksize, method=method)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1119, in insert
+    num_inserted = exec_insert(conn, keys, chunk_iter)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1010, in _execute_insert
+    result = conn.execute(self.table.insert(), data)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_insertmany_context(dialect, context)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2124, in _exec_insertmany_context
+    self._handle_dbapi_exception(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (psycopg2.errors.NotNullViolation) null value in column "IS_APPROVED" of relation "MST_SODATA" violates not-null constraint
+DETAIL:  Failing row contains (null, null, null, null, null, null, null, 3, 2900, 2910, 0002700328, 0002700160, 0.00, LCAS, null, ., 2026-02-28, EXW, TANJUNG PRIOK, null, 0210000780).
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PYT_TERMS", "CUST_REFERENCE", "CUST_REFERENCE_DATE", "INCO_TERMS", "INCO_LOCATION") VALUES (%(SO_NUMBER__0)s, %(COMPANY_CODE__0)s, %(P ... 251645 characters truncated ...  %(CUST_REFERENCE__999)s, %(CUST_REFERENCE_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s)]
+[parameters: {'COMPANY_CODE__0': '2900', 'SHIP_TO_PARTY__0': '0002700160', 'SO_NUMBER__0': '0210000780', 'INCO_LOCATION__0': 'TANJUNG PRIOK', 'PYT_TERMS__0': 'LCAS', 'CUST_REFERENCE__0': '.', 'SO_VALUE__0': 0.0, 'CUST_REFERENCE_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_TERMS__0': 'EXW', 'PLANT_CODE__0': '2910', 'CUSTOMER_CODE__0': '0002700328', 'COMPANY_CODE__1': '2900', 'SHIP_TO_PARTY__1': '0002502206', 'SO_NUMBER__1': '0243002530', 'INCO_LOCATION__1': 'PT. AM/NS Indonesia', 'PYT_TERMS__1': 'ADVN', 'CUST_REFERENCE__1': 'SECONDARY', 'SO_VALUE__1': 3951486.64, 'CUST_REFERENCE_DATE__1': datetime.datetime(2026, 2, 28, 0, 0), 'INCO_TERMS__1': 'EXW', 'PLANT_CODE__1': '2910', 'CUSTOMER_CODE__1': '0002502206', 'COMPANY_CODE__2': '2900', 'SHIP_TO_PARTY__2': '0002600757', 'SO_NUMBER__2': '0250005022', 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'PYT_TERMS__2': 'ADV4', 'CUST_REFERENCE__2': '008/I/Nasco/2026', 'SO_VALUE__2': 3569650.0, 'CUST_REFERENCE_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'INCO_TERMS__2': 'DEL', 'PLANT_CODE__2': '2910', 'CUSTOMER_CODE__2': '0002500010', 'COMPANY_CODE__3': '2900', 'SHIP_TO_PARTY__3': '0002600757', 'SO_NUMBER__3': '0250005022', 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'PYT_TERMS__3': 'ADV4', 'CUST_REFERENCE__3': '008/I/Nasco/2026', 'SO_VALUE__3': 3569650.0, 'CUST_REFERENCE_DATE__3': datetime.datetime(2026, 1, 28, 0, 0), 'INCO_TERMS__3': 'DEL', 'PLANT_CODE__3': '2910', 'CUSTOMER_CODE__3': '0002500010', 'COMPANY_CODE__4': '2900', 'SHIP_TO_PARTY__4': '0002700160', 'SO_NUMBER__4': '0250005104', 'INCO_LOCATION__4': 'TANJUNG PRIOK', 'PYT_TERMS__4': 'X000', 'CUST_REFERENCE__4': '.' ... 10900 parameters truncated ... 'CUST_REFERENCE__995': 'Sep CN', 'SO_VALUE__995': 138235.25, 'CUST_REFERENCE_DATE__995': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_TERMS__995': 'CFR', 'PLANT_CODE__995': '2010', 'CUSTOMER_CODE__995': '0000106198', 'COMPANY_CODE__996': '2000', 'SHIP_TO_PARTY__996': '0000106198', 'SO_NUMBER__996': '0001098936', 'INCO_LOCATION__996': 'KHOPOLI', 'PYT_TERMS__996': 'X015', 'CUST_REFERENCE__996': 'Sep CN', 'SO_VALUE__996': 34350075.0, 'CUST_REFERENCE_DATE__996': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_TERMS__996': 'CFR', 'PLANT_CODE__996': '2010', 'CUSTOMER_CODE__996': '0000106198', 'COMPANY_CODE__997': '2000', 'SHIP_TO_PARTY__997': '0000106198', 'SO_NUMBER__997': '0001098996', 'INCO_LOCATION__997': 'KHOPOLI', 'PYT_TERMS__997': 'X015', 'CUST_REFERENCE__997': 'Sep CN', 'SO_VALUE__997': 2093276.0, 'CUST_REFERENCE_DATE__997': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_TERMS__997': 'CFR', 'PLANT_CODE__997': '2010', 'CUSTOMER_CODE__997': '0000106198', 'COMPANY_CODE__998': '2000', 'SHIP_TO_PARTY__998': '0000106198', 'SO_NUMBER__998': '0001098997', 'INCO_LOCATION__998': 'KHOPOLI', 'PYT_TERMS__998': 'X015', 'CUST_REFERENCE__998': 'Sep CN', 'SO_VALUE__998': 69616.25, 'CUST_REFERENCE_DATE__998': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_TERMS__998': 'CFR', 'PLANT_CODE__998': '2010', 'CUSTOMER_CODE__998': '0000106198', 'COMPANY_CODE__999': '2000', 'SHIP_TO_PARTY__999': '0000106198', 'SO_NUMBER__999': '0001098998', 'INCO_LOCATION__999': 'KHOPOLI', 'PYT_TERMS__999': 'X015', 'CUST_REFERENCE__999': 'Sep CN', 'SO_VALUE__999': 47430656.75, 'CUST_REFERENCE_DATE__999': datetime.datetime(2024, 9, 30, 0, 0), 'INCO_TERMS__999': 'CFR', 'PLANT_CODE__999': '2010', 'CUSTOMER_CODE__999': '0000106198'}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+
+[2026-03-05 09:38:00,117] -- ERROR - sync_products_data.py -- insert_data - Line no - 178 -- Did not insert data --> Error --> SYNCING_ERROR_MAIL.html
+
+[2026-03-05 16:31:50,118] -- ERROR - sync_products_data.py -- insert_data - Line no - 154 -- EXCEPTION OCCURRED WHILE SYNCING SAP DATA WITH EMPLOYEE MASTER DATA
+
+[2026-03-05 16:31:50,120] -- ERROR - sync_products_data.py -- insert_data - Line no - 155 -- (psycopg2.errors.NotNullViolation) null value in column "IS_APPROVED" of relation "MST_SODATA" violates not-null constraint
+DETAIL:  Failing row contains (null, null, null, null, null, null, null, 4, 2900, 2910, 0002700328, 0002700160, 0.00, LCAS, null, ., 2026-02-28, EXW, TANJUNG PRIOK, null, 0210000780).
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PYT_TERMS", "CUST_REFERENCE", "CUST_REFERENCE_DATE", "INCO_TERMS", "INCO_LOCATION") VALUES (%(SO_NUMBER__0)s, %(COMPANY_CODE__0)s, %(P ... 251645 characters truncated ...  %(CUST_REFERENCE__999)s, %(CUST_REFERENCE_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s)]
+[parameters: {'CUSTOMER_CODE__0': '0002700328', 'CUST_REFERENCE__0': '.', 'INCO_LOCATION__0': 'TANJUNG PRIOK', 'PLANT_CODE__0': '2910', 'PYT_TERMS__0': 'LCAS', 'SO_NUMBER__0': '0210000780', 'SHIP_TO_PARTY__0': '0002700160', 'COMPANY_CODE__0': '2900', 'CUST_REFERENCE_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'SO_VALUE__0': 0.0, 'INCO_TERMS__0': 'EXW', 'CUSTOMER_CODE__1': '0002502206', 'CUST_REFERENCE__1': 'SECONDARY', 'INCO_LOCATION__1': 'PT. AM/NS Indonesia', 'PLANT_CODE__1': '2910', 'PYT_TERMS__1': 'ADVN', 'SO_NUMBER__1': '0243002530', 'SHIP_TO_PARTY__1': '0002502206', 'COMPANY_CODE__1': '2900', 'CUST_REFERENCE_DATE__1': datetime.datetime(2026, 2, 28, 0, 0), 'SO_VALUE__1': 3951486.64, 'INCO_TERMS__1': 'EXW', 'CUSTOMER_CODE__2': '0002500010', 'CUST_REFERENCE__2': '008/I/Nasco/2026', 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'PLANT_CODE__2': '2910', 'PYT_TERMS__2': 'ADV4', 'SO_NUMBER__2': '0250005022', 'SHIP_TO_PARTY__2': '0002600757', 'COMPANY_CODE__2': '2900', 'CUST_REFERENCE_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'SO_VALUE__2': 3569650.0, 'INCO_TERMS__2': 'DEL', 'CUSTOMER_CODE__3': '0002500010', 'CUST_REFERENCE__3': '008/I/Nasco/2026', 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'PLANT_CODE__3': '2910', 'PYT_TERMS__3': 'ADV4', 'SO_NUMBER__3': '0250005022', 'SHIP_TO_PARTY__3': '0002600757', 'COMPANY_CODE__3': '2900', 'CUST_REFERENCE_DATE__3': datetime.datetime(2026, 1, 28, 0, 0), 'SO_VALUE__3': 3569650.0, 'INCO_TERMS__3': 'DEL', 'CUSTOMER_CODE__4': '0002700139', 'CUST_REFERENCE__4': '.', 'INCO_LOCATION__4': 'TANJUNG PRIOK', 'PLANT_CODE__4': '2910', 'PYT_TERMS__4': 'X000', 'SO_NUMBER__4': '0250005104' ... 10900 parameters truncated ... 'SO_NUMBER__995': '0002037864', 'SHIP_TO_PARTY__995': '0000106198', 'COMPANY_CODE__995': '2000', 'CUST_REFERENCE_DATE__995': datetime.datetime(2024, 9, 30, 0, 0), 'SO_VALUE__995': 138235.25, 'INCO_TERMS__995': 'CFR', 'CUSTOMER_CODE__996': '0000106198', 'CUST_REFERENCE__996': 'Sep CN', 'INCO_LOCATION__996': 'KHOPOLI', 'PLANT_CODE__996': '2010', 'PYT_TERMS__996': 'X015', 'SO_NUMBER__996': '0001098936', 'SHIP_TO_PARTY__996': '0000106198', 'COMPANY_CODE__996': '2000', 'CUST_REFERENCE_DATE__996': datetime.datetime(2024, 9, 30, 0, 0), 'SO_VALUE__996': 34350075.0, 'INCO_TERMS__996': 'CFR', 'CUSTOMER_CODE__997': '0000106198', 'CUST_REFERENCE__997': 'Sep CN', 'INCO_LOCATION__997': 'KHOPOLI', 'PLANT_CODE__997': '2010', 'PYT_TERMS__997': 'X015', 'SO_NUMBER__997': '0001098996', 'SHIP_TO_PARTY__997': '0000106198', 'COMPANY_CODE__997': '2000', 'CUST_REFERENCE_DATE__997': datetime.datetime(2024, 9, 30, 0, 0), 'SO_VALUE__997': 2093276.0, 'INCO_TERMS__997': 'CFR', 'CUSTOMER_CODE__998': '0000106198', 'CUST_REFERENCE__998': 'Sep CN', 'INCO_LOCATION__998': 'KHOPOLI', 'PLANT_CODE__998': '2010', 'PYT_TERMS__998': 'X015', 'SO_NUMBER__998': '0001098997', 'SHIP_TO_PARTY__998': '0000106198', 'COMPANY_CODE__998': '2000', 'CUST_REFERENCE_DATE__998': datetime.datetime(2024, 9, 30, 0, 0), 'SO_VALUE__998': 69616.25, 'INCO_TERMS__998': 'CFR', 'CUSTOMER_CODE__999': '0000106198', 'CUST_REFERENCE__999': 'Sep CN', 'INCO_LOCATION__999': 'KHOPOLI', 'PLANT_CODE__999': '2010', 'PYT_TERMS__999': 'X015', 'SO_NUMBER__999': '0001098998', 'SHIP_TO_PARTY__999': '0000106198', 'COMPANY_CODE__999': '2000', 'CUST_REFERENCE_DATE__999': datetime.datetime(2024, 9, 30, 0, 0), 'SO_VALUE__999': 47430656.75, 'INCO_TERMS__999': 'CFR'}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+[2026-03-05 16:31:50,138] -- ERROR - sync_products_data.py -- insert_data - Line no - 156 -- Traceback (most recent call last):
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.NotNullViolation: null value in column "IS_APPROVED" of relation "MST_SODATA" violates not-null constraint
+DETAIL:  Failing row contains (null, null, null, null, null, null, null, 4, 2900, 2910, 0002700328, 0002700160, 0.00, LCAS, null, ., 2026-02-28, EXW, TANJUNG PRIOK, null, 0210000780).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 151, in insert_data
+    data_df.to_sql('MST_SODATA', con=conn_postgres, index=False, if_exists='append')
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\util\_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\core\generic.py", line 3087, in to_sql
+    return sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 842, in to_sql
+    return pandas_sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 2018, in to_sql
+    total_inserted = sql_engine.insert_records(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1567, in insert_records
+    raise err
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1558, in insert_records
+    return table.insert(chunksize=chunksize, method=method)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1119, in insert
+    num_inserted = exec_insert(conn, keys, chunk_iter)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1010, in _execute_insert
+    result = conn.execute(self.table.insert(), data)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_insertmany_context(dialect, context)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2124, in _exec_insertmany_context
+    self._handle_dbapi_exception(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (psycopg2.errors.NotNullViolation) null value in column "IS_APPROVED" of relation "MST_SODATA" violates not-null constraint
+DETAIL:  Failing row contains (null, null, null, null, null, null, null, 4, 2900, 2910, 0002700328, 0002700160, 0.00, LCAS, null, ., 2026-02-28, EXW, TANJUNG PRIOK, null, 0210000780).
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PYT_TERMS", "CUST_REFERENCE", "CUST_REFERENCE_DATE", "INCO_TERMS", "INCO_LOCATION") VALUES (%(SO_NUMBER__0)s, %(COMPANY_CODE__0)s, %(P ... 251645 characters truncated ...  %(CUST_REFERENCE__999)s, %(CUST_REFERENCE_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s)]
+[parameters: {'CUSTOMER_CODE__0': '0002700328', 'CUST_REFERENCE__0': '.', 'INCO_LOCATION__0': 'TANJUNG PRIOK', 'PLANT_CODE__0': '2910', 'PYT_TERMS__0': 'LCAS', 'SO_NUMBER__0': '0210000780', 'SHIP_TO_PARTY__0': '0002700160', 'COMPANY_CODE__0': '2900', 'CUST_REFERENCE_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'SO_VALUE__0': 0.0, 'INCO_TERMS__0': 'EXW', 'CUSTOMER_CODE__1': '0002502206', 'CUST_REFERENCE__1': 'SECONDARY', 'INCO_LOCATION__1': 'PT. AM/NS Indonesia', 'PLANT_CODE__1': '2910', 'PYT_TERMS__1': 'ADVN', 'SO_NUMBER__1': '0243002530', 'SHIP_TO_PARTY__1': '0002502206', 'COMPANY_CODE__1': '2900', 'CUST_REFERENCE_DATE__1': datetime.datetime(2026, 2, 28, 0, 0), 'SO_VALUE__1': 3951486.64, 'INCO_TERMS__1': 'EXW', 'CUSTOMER_CODE__2': '0002500010', 'CUST_REFERENCE__2': '008/I/Nasco/2026', 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'PLANT_CODE__2': '2910', 'PYT_TERMS__2': 'ADV4', 'SO_NUMBER__2': '0250005022', 'SHIP_TO_PARTY__2': '0002600757', 'COMPANY_CODE__2': '2900', 'CUST_REFERENCE_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'SO_VALUE__2': 3569650.0, 'INCO_TERMS__2': 'DEL', 'CUSTOMER_CODE__3': '0002500010', 'CUST_REFERENCE__3': '008/I/Nasco/2026', 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'PLANT_CODE__3': '2910', 'PYT_TERMS__3': 'ADV4', 'SO_NUMBER__3': '0250005022', 'SHIP_TO_PARTY__3': '0002600757', 'COMPANY_CODE__3': '2900', 'CUST_REFERENCE_DATE__3': datetime.datetime(2026, 1, 28, 0, 0), 'SO_VALUE__3': 3569650.0, 'INCO_TERMS__3': 'DEL', 'CUSTOMER_CODE__4': '0002700139', 'CUST_REFERENCE__4': '.', 'INCO_LOCATION__4': 'TANJUNG PRIOK', 'PLANT_CODE__4': '2910', 'PYT_TERMS__4': 'X000', 'SO_NUMBER__4': '0250005104' ... 10900 parameters truncated ... 'SO_NUMBER__995': '0002037864', 'SHIP_TO_PARTY__995': '0000106198', 'COMPANY_CODE__995': '2000', 'CUST_REFERENCE_DATE__995': datetime.datetime(2024, 9, 30, 0, 0), 'SO_VALUE__995': 138235.25, 'INCO_TERMS__995': 'CFR', 'CUSTOMER_CODE__996': '0000106198', 'CUST_REFERENCE__996': 'Sep CN', 'INCO_LOCATION__996': 'KHOPOLI', 'PLANT_CODE__996': '2010', 'PYT_TERMS__996': 'X015', 'SO_NUMBER__996': '0001098936', 'SHIP_TO_PARTY__996': '0000106198', 'COMPANY_CODE__996': '2000', 'CUST_REFERENCE_DATE__996': datetime.datetime(2024, 9, 30, 0, 0), 'SO_VALUE__996': 34350075.0, 'INCO_TERMS__996': 'CFR', 'CUSTOMER_CODE__997': '0000106198', 'CUST_REFERENCE__997': 'Sep CN', 'INCO_LOCATION__997': 'KHOPOLI', 'PLANT_CODE__997': '2010', 'PYT_TERMS__997': 'X015', 'SO_NUMBER__997': '0001098996', 'SHIP_TO_PARTY__997': '0000106198', 'COMPANY_CODE__997': '2000', 'CUST_REFERENCE_DATE__997': datetime.datetime(2024, 9, 30, 0, 0), 'SO_VALUE__997': 2093276.0, 'INCO_TERMS__997': 'CFR', 'CUSTOMER_CODE__998': '0000106198', 'CUST_REFERENCE__998': 'Sep CN', 'INCO_LOCATION__998': 'KHOPOLI', 'PLANT_CODE__998': '2010', 'PYT_TERMS__998': 'X015', 'SO_NUMBER__998': '0001098997', 'SHIP_TO_PARTY__998': '0000106198', 'COMPANY_CODE__998': '2000', 'CUST_REFERENCE_DATE__998': datetime.datetime(2024, 9, 30, 0, 0), 'SO_VALUE__998': 69616.25, 'INCO_TERMS__998': 'CFR', 'CUSTOMER_CODE__999': '0000106198', 'CUST_REFERENCE__999': 'Sep CN', 'INCO_LOCATION__999': 'KHOPOLI', 'PLANT_CODE__999': '2010', 'PYT_TERMS__999': 'X015', 'SO_NUMBER__999': '0001098998', 'SHIP_TO_PARTY__999': '0000106198', 'COMPANY_CODE__999': '2000', 'CUST_REFERENCE_DATE__999': datetime.datetime(2024, 9, 30, 0, 0), 'SO_VALUE__999': 47430656.75, 'INCO_TERMS__999': 'CFR'}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+
+[2026-03-05 16:31:50,148] -- ERROR - sync_products_data.py -- insert_data - Line no - 178 -- Did not insert data --> Error --> SYNCING_ERROR_MAIL.html
+
+[2026-03-06 09:51:17,497] -- ERROR - sync_products_data.py -- db_connection - Line no - 91 -- Did not insert data --> Error --> (cx_Oracle.DatabaseError) ORA-12170: TNS:Connect timeout occurred
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+
+[2026-03-06 09:51:17,497] -- ERROR - sync_products_data.py -- insert_data - Line no - 154 -- EXCEPTION OCCURRED WHILE SYNCING SAP DATA WITH EMPLOYEE MASTER DATA
+
+[2026-03-06 09:51:17,497] -- ERROR - sync_products_data.py -- insert_data - Line no - 155 -- (cx_Oracle.DatabaseError) ORA-12170: TNS:Connect timeout occurred
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+
+[2026-03-06 09:51:17,518] -- ERROR - sync_products_data.py -- insert_data - Line no - 156 -- Traceback (most recent call last):
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 3300, in raw_connection
+    return self.pool.connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 1263, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 179, in _do_get
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    return self._create_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 390, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 620, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+cx_Oracle.DatabaseError: ORA-12170: TNS:Connect timeout occurred
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 103, in insert_data
+    self.db_connection(database_credentials_oracle, database_type_oracle)
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 92, in db_connection
+    raise ex
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 88, in db_connection
+    conn = engine_bf.connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 3276, in connect
+    return self._connection_cls(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 148, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2440, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 3300, in raw_connection
+    return self.pool.connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 1263, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 179, in _do_get
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    return self._create_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 390, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 620, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+sqlalchemy.exc.DatabaseError: (cx_Oracle.DatabaseError) ORA-12170: TNS:Connect timeout occurred
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+
+
+[2026-03-06 09:51:17,518] -- ERROR - sync_products_data.py -- insert_data - Line no - 178 -- Did not insert data --> Error --> SYNCING_ERROR_MAIL.html
+
+[2026-03-06 09:53:53,603] -- ERROR - sync_products_data.py -- insert_data - Line no - 154 -- EXCEPTION OCCURRED WHILE SYNCING SAP DATA WITH EMPLOYEE MASTER DATA
+
+[2026-03-06 09:53:53,603] -- ERROR - sync_products_data.py -- insert_data - Line no - 155 -- (psycopg2.errors.NotNullViolation) null value in column "PLANT_CODE" of relation "MST_SODATA" violates not-null constraint
+DETAIL:  Failing row contains (null, null, null, null, null, null, null, 33, 2000, null, 0000400336, 0000400336, 1009002.68, EX02, null, D3#0396, 2025-11-22, EXW, SANASWADI, null, 0060045882).
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PYT_TERMS", "CUST_REFERENCE", "CUST_REFERENCE_DATE", "INCO_TERMS", "INCO_LOCATION") VALUES (%(SO_NUMBER__0)s, %(COMPANY_CODE__0)s, %(P ... 251645 characters truncated ...  %(CUST_REFERENCE__999)s, %(CUST_REFERENCE_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s)]
+[parameters: {'INCO_LOCATION__0': 'TANJUNG PRIOK', 'COMPANY_CODE__0': '2900', 'CUSTOMER_CODE__0': '0002700328', 'SO_NUMBER__0': '0210000780', 'SO_VALUE__0': 0.0, 'SHIP_TO_PARTY__0': '0002700160', 'CUST_REFERENCE_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'CUST_REFERENCE__0': '.', 'INCO_TERMS__0': 'EXW', 'PYT_TERMS__0': 'LCAS', 'PLANT_CODE__0': '2910', 'INCO_LOCATION__1': 'TANJUNG PRIOK', 'COMPANY_CODE__1': '2900', 'CUSTOMER_CODE__1': '0002500010', 'SO_NUMBER__1': '0250005022', 'SO_VALUE__1': 3569650.0, 'SHIP_TO_PARTY__1': '0002600757', 'CUST_REFERENCE_DATE__1': datetime.datetime(2026, 1, 28, 0, 0), 'CUST_REFERENCE__1': '008/I/Nasco/2026', 'INCO_TERMS__1': 'DEL', 'PYT_TERMS__1': 'ADV4', 'PLANT_CODE__1': '2910', 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'COMPANY_CODE__2': '2900', 'CUSTOMER_CODE__2': '0002500010', 'SO_NUMBER__2': '0250005022', 'SO_VALUE__2': 3569650.0, 'SHIP_TO_PARTY__2': '0002600757', 'CUST_REFERENCE_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'CUST_REFERENCE__2': '008/I/Nasco/2026', 'INCO_TERMS__2': 'DEL', 'PYT_TERMS__2': 'ADV4', 'PLANT_CODE__2': '2910', 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'COMPANY_CODE__3': '2900', 'CUSTOMER_CODE__3': '0002700139', 'SO_NUMBER__3': '0250005104', 'SO_VALUE__3': 0.0, 'SHIP_TO_PARTY__3': '0002700160', 'CUST_REFERENCE_DATE__3': datetime.datetime(2026, 2, 28, 0, 0), 'CUST_REFERENCE__3': '.', 'INCO_TERMS__3': 'CFR', 'PYT_TERMS__3': 'X000', 'PLANT_CODE__3': '2910', 'INCO_LOCATION__4': 'TANJUNG PRIOK', 'COMPANY_CODE__4': '2900', 'CUSTOMER_CODE__4': '0002700139', 'SO_NUMBER__4': '0250005105', 'SO_VALUE__4': 0.0, 'SHIP_TO_PARTY__4': '0002700160' ... 10900 parameters truncated ... 'SHIP_TO_PARTY__995': '0000106198', 'CUST_REFERENCE_DATE__995': datetime.datetime(2024, 7, 20, 0, 0), 'CUST_REFERENCE__995': '4120092272', 'INCO_TERMS__995': 'CFR', 'PYT_TERMS__995': 'X015', 'PLANT_CODE__995': '2010', 'INCO_LOCATION__996': 'KHOPOLI', 'COMPANY_CODE__996': '2000', 'CUSTOMER_CODE__996': '0000106198', 'SO_NUMBER__996': '2110102866', 'SO_VALUE__996': 30289800.0, 'SHIP_TO_PARTY__996': '0000106198', 'CUST_REFERENCE_DATE__996': datetime.datetime(2024, 7, 20, 0, 0), 'CUST_REFERENCE__996': '4120092272', 'INCO_TERMS__996': 'CFR', 'PYT_TERMS__996': 'X015', 'PLANT_CODE__996': '2010', 'INCO_LOCATION__997': 'KHOPOLI', 'COMPANY_CODE__997': '2000', 'CUSTOMER_CODE__997': '0000106198', 'SO_NUMBER__997': '2110102867', 'SO_VALUE__997': 35236500.0, 'SHIP_TO_PARTY__997': '0000106198', 'CUST_REFERENCE_DATE__997': datetime.datetime(2024, 7, 20, 0, 0), 'CUST_REFERENCE__997': '4120092272', 'INCO_TERMS__997': 'CFR', 'PYT_TERMS__997': 'X015', 'PLANT_CODE__997': '2010', 'INCO_LOCATION__998': 'KHOPOLI', 'COMPANY_CODE__998': '2000', 'CUSTOMER_CODE__998': '0000106198', 'SO_NUMBER__998': '2110102868', 'SO_VALUE__998': 40969000.0, 'SHIP_TO_PARTY__998': '0000106198', 'CUST_REFERENCE_DATE__998': datetime.datetime(2024, 7, 20, 0, 0), 'CUST_REFERENCE__998': '4120092272', 'INCO_TERMS__998': 'CFR', 'PYT_TERMS__998': 'X015', 'PLANT_CODE__998': '2010', 'INCO_LOCATION__999': 'KHOPOLI', 'COMPANY_CODE__999': '2000', 'CUSTOMER_CODE__999': '0000106198', 'SO_NUMBER__999': '2110102869', 'SO_VALUE__999': 49885701.6, 'SHIP_TO_PARTY__999': '0000106198', 'CUST_REFERENCE_DATE__999': datetime.datetime(2024, 7, 20, 0, 0), 'CUST_REFERENCE__999': '4120092272', 'INCO_TERMS__999': 'CFR', 'PYT_TERMS__999': 'X015', 'PLANT_CODE__999': '2010'}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+[2026-03-06 09:53:53,620] -- ERROR - sync_products_data.py -- insert_data - Line no - 156 -- Traceback (most recent call last):
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.NotNullViolation: null value in column "PLANT_CODE" of relation "MST_SODATA" violates not-null constraint
+DETAIL:  Failing row contains (null, null, null, null, null, null, null, 33, 2000, null, 0000400336, 0000400336, 1009002.68, EX02, null, D3#0396, 2025-11-22, EXW, SANASWADI, null, 0060045882).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 151, in insert_data
+    data_df.to_sql('MST_SODATA', con=conn_postgres, index=False, if_exists='append')
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\util\_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\core\generic.py", line 3087, in to_sql
+    return sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 842, in to_sql
+    return pandas_sql.to_sql(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 2018, in to_sql
+    total_inserted = sql_engine.insert_records(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1567, in insert_records
+    raise err
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1558, in insert_records
+    return table.insert(chunksize=chunksize, method=method)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1119, in insert
+    num_inserted = exec_insert(conn, keys, chunk_iter)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\pandas\io\sql.py", line 1010, in _execute_insert
+    result = conn.execute(self.table.insert(), data)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_insertmany_context(dialect, context)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2124, in _exec_insertmany_context
+    self._handle_dbapi_exception(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (psycopg2.errors.NotNullViolation) null value in column "PLANT_CODE" of relation "MST_SODATA" violates not-null constraint
+DETAIL:  Failing row contains (null, null, null, null, null, null, null, 33, 2000, null, 0000400336, 0000400336, 1009002.68, EX02, null, D3#0396, 2025-11-22, EXW, SANASWADI, null, 0060045882).
+
+[SQL: INSERT INTO "MST_SODATA" ("SO_NUMBER", "COMPANY_CODE", "PLANT_CODE", "CUSTOMER_CODE", "SHIP_TO_PARTY", "SO_VALUE", "PYT_TERMS", "CUST_REFERENCE", "CUST_REFERENCE_DATE", "INCO_TERMS", "INCO_LOCATION") VALUES (%(SO_NUMBER__0)s, %(COMPANY_CODE__0)s, %(P ... 251645 characters truncated ...  %(CUST_REFERENCE__999)s, %(CUST_REFERENCE_DATE__999)s, %(INCO_TERMS__999)s, %(INCO_LOCATION__999)s)]
+[parameters: {'INCO_LOCATION__0': 'TANJUNG PRIOK', 'COMPANY_CODE__0': '2900', 'CUSTOMER_CODE__0': '0002700328', 'SO_NUMBER__0': '0210000780', 'SO_VALUE__0': 0.0, 'SHIP_TO_PARTY__0': '0002700160', 'CUST_REFERENCE_DATE__0': datetime.datetime(2026, 2, 28, 0, 0), 'CUST_REFERENCE__0': '.', 'INCO_TERMS__0': 'EXW', 'PYT_TERMS__0': 'LCAS', 'PLANT_CODE__0': '2910', 'INCO_LOCATION__1': 'TANJUNG PRIOK', 'COMPANY_CODE__1': '2900', 'CUSTOMER_CODE__1': '0002500010', 'SO_NUMBER__1': '0250005022', 'SO_VALUE__1': 3569650.0, 'SHIP_TO_PARTY__1': '0002600757', 'CUST_REFERENCE_DATE__1': datetime.datetime(2026, 1, 28, 0, 0), 'CUST_REFERENCE__1': '008/I/Nasco/2026', 'INCO_TERMS__1': 'DEL', 'PYT_TERMS__1': 'ADV4', 'PLANT_CODE__1': '2910', 'INCO_LOCATION__2': 'TANJUNG PRIOK', 'COMPANY_CODE__2': '2900', 'CUSTOMER_CODE__2': '0002500010', 'SO_NUMBER__2': '0250005022', 'SO_VALUE__2': 3569650.0, 'SHIP_TO_PARTY__2': '0002600757', 'CUST_REFERENCE_DATE__2': datetime.datetime(2026, 1, 28, 0, 0), 'CUST_REFERENCE__2': '008/I/Nasco/2026', 'INCO_TERMS__2': 'DEL', 'PYT_TERMS__2': 'ADV4', 'PLANT_CODE__2': '2910', 'INCO_LOCATION__3': 'TANJUNG PRIOK', 'COMPANY_CODE__3': '2900', 'CUSTOMER_CODE__3': '0002700139', 'SO_NUMBER__3': '0250005104', 'SO_VALUE__3': 0.0, 'SHIP_TO_PARTY__3': '0002700160', 'CUST_REFERENCE_DATE__3': datetime.datetime(2026, 2, 28, 0, 0), 'CUST_REFERENCE__3': '.', 'INCO_TERMS__3': 'CFR', 'PYT_TERMS__3': 'X000', 'PLANT_CODE__3': '2910', 'INCO_LOCATION__4': 'TANJUNG PRIOK', 'COMPANY_CODE__4': '2900', 'CUSTOMER_CODE__4': '0002700139', 'SO_NUMBER__4': '0250005105', 'SO_VALUE__4': 0.0, 'SHIP_TO_PARTY__4': '0002700160' ... 10900 parameters truncated ... 'SHIP_TO_PARTY__995': '0000106198', 'CUST_REFERENCE_DATE__995': datetime.datetime(2024, 7, 20, 0, 0), 'CUST_REFERENCE__995': '4120092272', 'INCO_TERMS__995': 'CFR', 'PYT_TERMS__995': 'X015', 'PLANT_CODE__995': '2010', 'INCO_LOCATION__996': 'KHOPOLI', 'COMPANY_CODE__996': '2000', 'CUSTOMER_CODE__996': '0000106198', 'SO_NUMBER__996': '2110102866', 'SO_VALUE__996': 30289800.0, 'SHIP_TO_PARTY__996': '0000106198', 'CUST_REFERENCE_DATE__996': datetime.datetime(2024, 7, 20, 0, 0), 'CUST_REFERENCE__996': '4120092272', 'INCO_TERMS__996': 'CFR', 'PYT_TERMS__996': 'X015', 'PLANT_CODE__996': '2010', 'INCO_LOCATION__997': 'KHOPOLI', 'COMPANY_CODE__997': '2000', 'CUSTOMER_CODE__997': '0000106198', 'SO_NUMBER__997': '2110102867', 'SO_VALUE__997': 35236500.0, 'SHIP_TO_PARTY__997': '0000106198', 'CUST_REFERENCE_DATE__997': datetime.datetime(2024, 7, 20, 0, 0), 'CUST_REFERENCE__997': '4120092272', 'INCO_TERMS__997': 'CFR', 'PYT_TERMS__997': 'X015', 'PLANT_CODE__997': '2010', 'INCO_LOCATION__998': 'KHOPOLI', 'COMPANY_CODE__998': '2000', 'CUSTOMER_CODE__998': '0000106198', 'SO_NUMBER__998': '2110102868', 'SO_VALUE__998': 40969000.0, 'SHIP_TO_PARTY__998': '0000106198', 'CUST_REFERENCE_DATE__998': datetime.datetime(2024, 7, 20, 0, 0), 'CUST_REFERENCE__998': '4120092272', 'INCO_TERMS__998': 'CFR', 'PYT_TERMS__998': 'X015', 'PLANT_CODE__998': '2010', 'INCO_LOCATION__999': 'KHOPOLI', 'COMPANY_CODE__999': '2000', 'CUSTOMER_CODE__999': '0000106198', 'SO_NUMBER__999': '2110102869', 'SO_VALUE__999': 49885701.6, 'SHIP_TO_PARTY__999': '0000106198', 'CUST_REFERENCE_DATE__999': datetime.datetime(2024, 7, 20, 0, 0), 'CUST_REFERENCE__999': '4120092272', 'INCO_TERMS__999': 'CFR', 'PYT_TERMS__999': 'X015', 'PLANT_CODE__999': '2010'}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+
+[2026-03-06 09:53:53,624] -- ERROR - sync_products_data.py -- insert_data - Line no - 178 -- Did not insert data --> Error --> SYNCING_ERROR_MAIL.html
+
+[2026-03-06 10:01:41,687] -- ERROR - sync_products_data.py -- db_connection - Line no - 91 -- Did not insert data --> Error --> (cx_Oracle.DatabaseError) ORA-12560: TNS:protocol adapter error
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+
+[2026-03-06 10:01:41,687] -- ERROR - sync_products_data.py -- insert_data - Line no - 154 -- EXCEPTION OCCURRED WHILE SYNCING SAP DATA WITH EMPLOYEE MASTER DATA
+
+[2026-03-06 10:01:41,689] -- ERROR - sync_products_data.py -- insert_data - Line no - 155 -- (cx_Oracle.DatabaseError) ORA-12560: TNS:protocol adapter error
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+
+[2026-03-06 10:01:41,695] -- ERROR - sync_products_data.py -- insert_data - Line no - 156 -- Traceback (most recent call last):
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 3300, in raw_connection
+    return self.pool.connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 1263, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 179, in _do_get
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    return self._create_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 390, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 620, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+cx_Oracle.DatabaseError: ORA-12560: TNS:protocol adapter error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 103, in insert_data
+    self.db_connection(database_credentials_oracle, database_type_oracle)
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 92, in db_connection
+    raise ex
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 88, in db_connection
+    conn = engine_bf.connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 3276, in connect
+    return self._connection_cls(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 148, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2440, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 3300, in raw_connection
+    return self.pool.connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 1263, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 179, in _do_get
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    return self._create_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 390, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 620, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+sqlalchemy.exc.DatabaseError: (cx_Oracle.DatabaseError) ORA-12560: TNS:protocol adapter error
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+
+
+[2026-03-06 10:01:41,703] -- ERROR - sync_products_data.py -- insert_data - Line no - 178 -- Did not insert data --> Error --> SYNCING_ERROR_MAIL.html
+
+[2026-03-06 10:16:46,032] -- ERROR - sync_products_data.py -- db_connection - Line no - 91 -- Did not insert data --> Error --> (cx_Oracle.DatabaseError) ORA-12560: TNS:protocol adapter error
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+
+[2026-03-06 10:16:46,034] -- ERROR - sync_products_data.py -- insert_data - Line no - 155 -- EXCEPTION OCCURRED WHILE SYNCING SAP DATA WITH EMPLOYEE MASTER DATA
+
+[2026-03-06 10:16:46,040] -- ERROR - sync_products_data.py -- insert_data - Line no - 156 -- (cx_Oracle.DatabaseError) ORA-12560: TNS:protocol adapter error
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+
+[2026-03-06 10:16:46,066] -- ERROR - sync_products_data.py -- insert_data - Line no - 157 -- Traceback (most recent call last):
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 3300, in raw_connection
+    return self.pool.connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 1263, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 179, in _do_get
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    return self._create_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 390, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 620, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+cx_Oracle.DatabaseError: ORA-12560: TNS:protocol adapter error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 103, in insert_data
+    self.db_connection(database_credentials_oracle, database_type_oracle)
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 92, in db_connection
+    raise ex
+  File "C:\AMNS_Project\lcpark\masters\management\commands\sync_products_data.py", line 88, in db_connection
+    conn = engine_bf.connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 3276, in connect
+    return self._connection_cls(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 148, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 2440, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\base.py", line 3300, in raw_connection
+    return self.pool.connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 1263, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 179, in _do_get
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    return self._create_connection()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 390, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\sqlalchemy\engine\default.py", line 620, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+sqlalchemy.exc.DatabaseError: (cx_Oracle.DatabaseError) ORA-12560: TNS:protocol adapter error
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+
+
+[2026-03-06 10:16:46,090] -- ERROR - sync_products_data.py -- insert_data - Line no - 179 -- Did not insert data --> Error --> SYNCING_ERROR_MAIL.html
+

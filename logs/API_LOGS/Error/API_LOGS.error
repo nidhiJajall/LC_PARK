@@ -1,0 +1,9 @@
+[2026-03-09 14:22:10,245] -- ERROR - filters.py -- handleSearchData - Line no - 121 -- 'sodata'
+Traceback (most recent call last):
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\api\filters.py", line 107, in handleSearchData
+    final_qs = model_filter.filter_queryset(request, objs, APIView)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\rest_framework\filters.py", line 154, in filter_queryset
+    search_fields = self.get_search_fields(view, request)
+  File "C:\AMNS_Project\Envs\lcpark2\lib\site-packages\api\filters.py", line 59, in get_search_fields
+    temp.setlist('search_fields',APPLY_SEARCH_MODEL_FIELDS[model.lower()])
+KeyError: 'sodata'
