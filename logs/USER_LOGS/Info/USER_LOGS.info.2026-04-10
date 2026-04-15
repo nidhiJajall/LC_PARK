@@ -1,0 +1,6 @@
+[2026-04-10 12:09:41,384] -- INFO - decorators.py -- wrap - Line no - 88 -- Data by POST for Incoming Login Request by -- njajal -- IP -- 127.0.0.1
+
+[2026-04-10 12:09:52,465] -- INFO - login_serializer.py -- GetUserData - Line no - 31 --  User Authenticated -- njajal 
+
+[2026-04-10 12:09:52,489] -- INFO - views.py -- post - Line no - 686 -- Token Successful for user -- njajal -- IP -- 127.0.0.1
+

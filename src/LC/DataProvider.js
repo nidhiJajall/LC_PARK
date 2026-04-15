@@ -1,9 +1,3 @@
-// LC/DataProvider.js
-// ─────────────────────────────────────────────────────────────────────────────
-// ALL API calls for the LC module live here.
-// Screens never call fetch() directly — they always go through dataProvider.
-// ─────────────────────────────────────────────────────────────────────────────
-
 import {
     BASE_URL,
     STANDARD_METHOD_OPTIONS,
@@ -30,13 +24,19 @@ const dataProvider = {
         });
     },
 
-    // ── GET SO data by SO Number ──
-    // Called when user enters SO number and tabs out (onBlur)
-    // Returns: company_code, plant_code, customer_code, ship_to_party, so_value, etc.
     getSODetails: (url) => {
         return fetch(`${BASE_URL}${url}`, {
             method: "GET",
             headers: HEADER_JSON,
+            ...STANDARD_METHOD_OPTIONS,
+        });
+    },
+
+    callOCRApi: (url, body) => {
+            return fetch(`${BASE_URL}${url}`, {
+            method: "POST",
+            Authorization: HEADER_JSON.Authorization,
+            body: body,
             ...STANDARD_METHOD_OPTIONS,
         });
     },
@@ -46,6 +46,7 @@ const dataProvider = {
     createLCRequest: (url, body) => {
         return fetch(`${BASE_URL}${url}`, {
             method: "POST",
+            Authorization: HEADER_JSON.Authorization,
             body: body,
             ...STANDARD_METHOD_OPTIONS,
         });
