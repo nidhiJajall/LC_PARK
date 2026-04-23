@@ -136,7 +136,7 @@ class Command(BaseCommand):
                                                     ON v.vbeln = f.vbeln 
                                                     AND v.posnr = f.first_posnr
                                             )
-                                            SELECT DISTINCT
+                                            SELECT
                                                 vbak.vbeln AS so_number,
                                                 vbak.bukrs_vf AS company_code,
                                                 id.werks AS plant_code,

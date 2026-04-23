@@ -508,7 +508,7 @@ class LCRequestService:
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        prefix       = getattr(settings, "PROJECT_API_PREFIX",      "testproject")
+        prefix       = getattr(settings, "PROJECT_API_PREFIX",      "lcpark")
         master_route = getattr(settings, "MASTERS_ROUTE",            "master")
         app_model    = getattr(settings, "MASTERS_SODATA_APP_MODEL", "Master.Sodata")
 

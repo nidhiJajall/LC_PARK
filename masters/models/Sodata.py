@@ -7,11 +7,16 @@ from reversion import revisions as reversion
 class Sodata(BaseModel):
     so_id = models.AutoField(primary_key=True, db_column='SO_ID')
 
-    so_number = models.CharField(db_column='SO_NUMBER', max_length=20, blank=True, null=True)
+    so_number = models.CharField(db_column='SO_NUMBER', max_length=20, db_index=True, null=True)
     company_code = models.CharField(db_column='COMPANY_CODE', max_length=10)
     plant_code = models.CharField(db_column='PLANT_CODE', max_length=10)
     customer_code = models.CharField(db_column='CUSTOMER_CODE', max_length=20)  # Added (from your table image)
     ship_to_party = models.CharField(db_column='SHIP_TO_PARTY', max_length=20)
+    ship_to_address = models.CharField(db_column='SHIP_TO_ADDRESS', max_length=100, null=True, blank=True)
+    ship_to_city = models.CharField(db_column='SHIP_TO_CITY', max_length=50, null=True, blank=True)
+    ship_to_street = models.CharField(db_column='SHIP_TO_STREET', max_length=50, null=True, blank=True)
+    ship_to_pincode = models.CharField(db_column='SHIP_TO_PINCODE', max_length=50, null=True, blank=True)
+    ship_to_country = models.CharField(db_column='SHIP_TO_COUNTRY', max_length=50, null=True, blank=True)
 
     so_value = models.DecimalField(db_column='SO_VALUE', max_digits=18, decimal_places=2)
 
@@ -76,6 +81,53 @@ class Sodata(BaseModel):
                             "id": "ship_to_party",
                             "placeholder": "Enter Ship To Party",
                             "disabled": False
+                        },
+                        {
+                            "label": "Ship To Address",
+                            "decorator": "ship_to_address",
+                            "type": "textbox",
+                            "required": "true",
+                            "message": "Ship To Address is required.",
+                            "id": "ship_to_address",
+                            "placeholder": "Enter Ship To Address"
+                        },
+                        {
+                            "label": "Ship To City",
+                            "decorator": "ship_to_city",
+                            "type": "textbox",
+                            "required": "true",
+                            "message": "Ship To City is required.",
+                            "id": "ship_to_city",
+                            "placeholder": "Enter Ship To City",
+                            "disabled": False
+                        },
+                        {
+                            "label": "Ship To Street",
+                            "decorator": "ship_to_street",
+                            "type": "textbox",
+                            "required": "true",
+                            "message": "Ship To Street is required.",
+                            "id": "ship_to_street",
+                            "placeholder": "Enter Ship To Street"
+                        },
+                        {
+                            "label": "Ship To Pincode",
+                            "decorator": "ship_to_pincode",
+                            "type": "textbox",
+                            "required": "true",
+                            "message": "Ship To Pincode is required.",
+                            "id": "ship_to_pincode",
+                            "placeholder": "Enter Ship To Pincode",
+                            "disabled": False
+                        },
+                        {
+                            "label": "Ship To Country",
+                            "decorator": "ship_to_country",
+                            "type": "textbox",
+                            "required": "true",
+                            "message": "Ship To Country is required.",
+                            "id": "ship_to_country",
+                            "placeholder": "Enter Ship To Country"
                         },
                         {
                             "label": "SO Value",

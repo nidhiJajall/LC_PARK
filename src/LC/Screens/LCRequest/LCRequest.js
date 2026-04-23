@@ -79,7 +79,7 @@ const SubHeading = ({ text }) => (
     </div>
 );
 
-const OCR_API_URL = "/testproject/lc_request/ocr/";
+const OCR_API_URL = "/lcpark/lc_request/ocr/";
 const OCR_PROJECT    = "LC PARK & ENTRY";
 const DATE_FIELDS    = ["opening_date", "dispatch_upto_date", "expiry_date"];
 

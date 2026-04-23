@@ -118,61 +118,33 @@ class Command(BaseCommand):
                 # OR
                 # md.SPEME > 0)
 
-                data_df = pd.read_sql("""WITH First_Item AS (
-                                                -- This calculates the first item for every SO once, then stops.
-                                                SELECT 
-                                                    vbeln, 
-                                                    MIN(posnr) as first_posnr
-                                                FROM DS_SAP.VBAP
-                                                GROUP BY vbeln
-                                            ),
-                                            Item_Data AS (
-                                                -- This gets the plant only for those specific first items
-                                                SELECT 
-                                                    v.vbeln,
-                                                    v.werks
-                                                FROM DS_SAP.VBAP v
-                                                INNER JOIN First_Item f 
-                                                    ON v.vbeln = f.vbeln 
-                                                    AND v.posnr = f.first_posnr
-                                            )
-                                            SELECT DISTINCT
-                                                vbak.vbeln AS so_number,
-                                                vbak.bukrs_vf AS company_code,
-                                                id.werks AS plant_code,
-                                                vbak.kunnr AS customer_code,
-                                                vbpa.kunnr AS ship_to_party,
-                                                kna1.name1 AS ship_to_address,
-                                                kna1.ort01 AS ship_to_city,
-                                                kna1.stras AS ship_to_street,
-                                                kna1.pstlz AS ship_to_pincode,
-                                                kna1.land1 AS ship_to_country,
-                                                vbak.netwr AS so_value,
-                                                vbkd.zterm AS pyt_terms,
-                                                vbak.bstnk AS cust_reference,
-                                                vbak.bstdk AS cust_reference_date,
-                                                vbkd.inco1 AS inco_terms,
-                                                vbkd.inco2_l AS inco_location
-                                            FROM
-                                                DS_SAP.VBAK vbak
-                                            LEFT JOIN Item_Data id
-                                                ON vbak.vbeln = id.vbeln
-                                            LEFT JOIN DS_SAP.VBPA vbpa
-                                                ON vbak.vbeln = vbpa.vbeln
-                                                AND vbpa.parvw = 'WE'
-                                            LEFT JOIN DS_SAP.KNA1 kna1 
-                                                ON vbpa.kunnr = kna1.kunnr
-                                            LEFT JOIN DS_SAP.VBKD vbkd
-                                                ON vbak.vbeln = vbkd.vbeln
-                                                AND vbkd.posnr = '000000'
-                                            WHERE
-                                                vbak.vbeln IS NOT NULL""", con=conn_oracle)
+                data_df = pd.read_sql("""SELECT
+                                                vbap.vbeln AS so_number,
+                                                vbap.posnr AS item_number,
+                                                vbap.matnr AS material_no,
+                                                vbap.kwmeng AS material_qty,
+                                                vbap.vrkme AS unit,
+                                                vbap.cmpre AS material_price,
+                                                (vbap.kwmeng / NULLIF(vbap.kpein, 0)) 
+                                                    * vbap.cmpre AS matl_value
+                                            FROM DS_SAP.VBAP vbap
+                                            JOIN DS_SAP.VBAK vbak
+                                                ON vbap.vbeln = vbak.vbeln
+                                            WHERE vbap.vbeln IS NOT NULL""", con=conn_oracle)
                 data_df = data_df.rename(columns=str.upper)
                 data_df.replace({pd.NaT: None}, inplace=True)
                 lcparkLogs.info(f'Length of data : -- {len(data_df)}')
 
-                conn_postgres.execute(text('TRUNCATE TABLE "MST_SODATA"'))
-                data_df.to_sql('MST_SODATA', con=conn_postgres, index=False, if_exists='append')
+                conn_postgres.execute(text('TRUNCATE TABLE "MST_ITEM_DATA"'))
+                # data_df.to_sql('MST_ITEM_DATA', con=conn_postgres, index=False, if_exists='append')
+                data_df.to_sql(
+                    'MST_ITEM_DATA',
+                    con=conn_postgres,
+                    index=False,
+                    if_exists='append',
+                    chunksize=100,
+                    method='multi'
+                )
                 conn_postgres.commit()
                 lcparkLogs.info(f'Data inserted successfully')
             except Exception as ex:
