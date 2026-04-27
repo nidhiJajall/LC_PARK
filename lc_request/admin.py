@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import LCRequest, LCSODetail, SODetail
+from .models import LcRequest, LcDetails, LcFiles
 
-admin.site.register(LCRequest)
-admin.site.register(LCSODetail)
-admin.site.register(SODetail)
+admin.site.register(LcRequest)
+admin.site.register(LcDetails)
+admin.site.register(LcFiles)

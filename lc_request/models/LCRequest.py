@@ -1,53 +1,43 @@
 from django.db import models
+from reversion import revisions as reversion
+from api.models import BaseModel
+from lc_request import Constants
+from lc_request.models.LcDetails import LcDetails
+from masters.models.Sodata import Sodata
 
 
-class LCRequest(models.Model):
+class LcRequest(BaseModel):
+    lc_details = models.ForeignKey(
+        LcDetails,
+        db_column='LC_DETAILS_ID',
+        on_delete=models.CASCADE,
+        related_name='lc_request_lc_details',
+        null=True,
+        blank=True,
+        help_text="Points to the N (user-editable) LcDetails entry.",
+    )
 
-    STATUS_CHOICES = [
-        ("draft",     "Draft"),
-        ("submitted", "Submitted"),
-    ]
+    interest_free_credit_days = models.IntegerField(db_column='INTEREST_FREE_CREDIT_DAYS', blank=True, null=True)
+    interest_charges = models.DecimalField(db_column='INTEREST_CHARGES', max_digits=12, decimal_places=2, blank=True,
+                                           null=True)
+    usance_period = models.IntegerField(db_column='USANCE_PERIOD', blank=True, null=True)
 
-    # LC Details — extracted by OCR, editable by user
-    instrument_number                  = models.CharField(max_length=100, blank=True, null=True)
-    form_of_doc                        = models.CharField(max_length=100, blank=True, null=True)
-    opening_bank                       = models.CharField(max_length=255, blank=True, null=True)
-    opening_date                       = models.DateField(blank=True, null=True)
-    usance_period                      = models.IntegerField(blank=True, null=True)
-    dispatch_upto_date                 = models.DateField(blank=True, null=True)
-    negotiation_days                   = models.IntegerField(blank=True, null=True)
-    expiry_date                        = models.DateField(blank=True, null=True)
-    place_take_in_charge               = models.CharField(max_length=255, blank=True, null=True)
-    place_of_final_destination         = models.CharField(max_length=255, blank=True, null=True)
-    advising_bank                      = models.CharField(max_length=255, blank=True, null=True)
-    es                                 = models.BooleanField(default=False, null=True, blank=True)
-    et                                 = models.BooleanField(default=False, null=True, blank=True)
-    er                                 = models.BooleanField(default=False, null=True, blank=True)
-    grace_value                        = models.BigIntegerField(blank=True, null=True)
-    percentage_credit_amount_tolerance = models.CharField(max_length=50, blank=True, null=True)
-    cust_name_inv_print                = models.CharField(max_length=255, blank=True, null=True)
-    customer_name                      = models.CharField(max_length=255, blank=True, null=True)
-    clause_45a                         = models.TextField(blank=True, null=True)
-    incoterm                           = models.CharField(max_length=100, blank=True, null=True)
-    imps_remark                        = models.CharField(max_length=255, blank=True, null=True)
-    additional_condition_46a           = models.TextField(blank=True, null=True)
-    clause_78                          = models.TextField(blank=True, null=True)
+    # M2M: table name will be TRANS_LC_REQUEST_so_data
+    so_data = models.ManyToManyField(Sodata, related_name='lc_request_sodata', blank=True)
 
-    # Attachment
-    attachment = models.FileField(upload_to="lc_attachments/", blank=True, null=True)
-    password   = models.CharField(max_length=255, blank=True, null=True)
-
-    # Workflow
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="draft")
-
-    # Audit
-    created_by   = models.CharField(max_length=100, blank=True, null=True)
-    created_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = "lc_request"
-        ordering = ["-created_date"]
+    request_status = models.CharField(
+        db_column='REQUEST_STATUS',
+        max_length=20,
+        default=Constants.STATUS_DRAFT,
+        choices=Constants.STATUS_CHOICES,
+    )
 
     def __str__(self):
-        return f"LC-{self.pk} | {self.instrument_number or 'N/A'} | {self.status}"
+        return f"LCRequest #{self.pk}"
+
+    class Meta:
+        app_label = Constants.APP_LABEL
+        db_table = 'TRANS_LC_REQUEST'
+
+
+reversion.register(LcRequest)

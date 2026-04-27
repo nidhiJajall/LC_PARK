@@ -1,3 +1,3 @@
-from .LCRequest import LCRequest
-from .LCSODetail import LCSODetail
-from .SODetail import SODetail
+from .LCRequest import LcRequest
+from .LcDetails import LcDetails
+from .LcFiles import LcFiles

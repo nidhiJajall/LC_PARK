@@ -7,6 +7,7 @@ export const LC_SO_LOOKUP_API_PATH = "/master/Master.Sodata/";  // called when S
 
 // AG Grid Column Definitions for the List Screen
 export const LC_LIST_COLUMNDEFS = [
+    { headerName: "Instrument Number", field: "instrument_number", sortable: true, filter: true},
     { headerName: "SO Number",     field: "so_number",     sortable: true, filter: true },
     { headerName: "Customer Code", field: "customer_code", sortable: true, filter: true },
     { headerName: "SO Value",      field: "so_value",      sortable: true, filter: true },

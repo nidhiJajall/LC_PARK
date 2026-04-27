@@ -7,7 +7,47 @@ import {
     DeleteOutlined,
     FileTextOutlined,
     InfoCircleOutlined,
+    EnvironmentOutlined,
 } from "@ant-design/icons";
+
+// ADD-ON 2: Ship-to address tooltip content
+const ShipToAddressTooltip = ({ record }) => {
+    const lines = [
+        record.ship_to_address,
+        record.ship_to_street,
+        record.ship_to_city,
+        record.ship_to_pincode,
+        record.ship_to_country,
+    ].filter(Boolean);
+
+    if (lines.length === 0) return null;
+
+    return (
+        <div style={{ fontSize: "12px", lineHeight: "1.7" }}>
+            <div style={{
+                fontWeight   : 600,
+                marginBottom : "4px",
+                color        : "#fff",
+                borderBottom : "1px solid rgba(255,255,255,0.3)",
+                paddingBottom: "4px",
+                display      : "flex",
+                alignItems   : "center",
+                gap          : "5px",
+            }}>
+                <EnvironmentOutlined /> Ship-To Address
+            </div>
+            {record.ship_to_address  && <div>{record.ship_to_address}</div>}
+            {record.ship_to_street   && <div>{record.ship_to_street}</div>}
+            {record.ship_to_city     && (
+                <div>
+                    {record.ship_to_city}
+                    {record.ship_to_pincode ? ` — ${record.ship_to_pincode}` : ""}
+                </div>
+            )}
+            {record.ship_to_country  && <div>{record.ship_to_country}</div>}
+        </div>
+    );
+};
 
 const SODetails = ({ onFetchData, fetchedData, isFetching, onDeleteRow }) => {
 
@@ -41,10 +81,42 @@ const SODetails = ({ onFetchData, fetchedData, isFetching, onDeleteRow }) => {
             width: 150,
         },
         {
+            // ADD-ON 2: Show ship-to address details on hover
             title: "Ship To Party",
             dataIndex: "ship_to_party",
             key: "ship_to_party",
-            width: 140,
+            width: 160,
+            render: (val, record) => {
+                const hasAddress = [
+                    record.ship_to_address,
+                    record.ship_to_street,
+                    record.ship_to_city,
+                    record.ship_to_pincode,
+                    record.ship_to_country,
+                ].some(Boolean);
+
+                if (!hasAddress) return val || "—";
+
+                return (
+                    <Tooltip
+                        title={<ShipToAddressTooltip record={record} />}
+                        placement="topLeft"
+                        overlayStyle={{ maxWidth: 280 }}
+                        color="#1a1a2e"
+                    >
+                        <span style={{
+                            cursor         : "help",
+                            borderBottom   : "1px dashed #aaa",
+                            display        : "inline-flex",
+                            alignItems     : "center",
+                            gap            : "4px",
+                        }}>
+                            {val || "—"}
+                            <EnvironmentOutlined style={{ fontSize: "11px", color: "#999" }} />
+                        </span>
+                    </Tooltip>
+                );
+            },
         },
         {
             title: "SO Value",
@@ -145,7 +217,6 @@ const SODetails = ({ onFetchData, fetchedData, isFetching, onDeleteRow }) => {
                                 SO Number
                             </span>
                         }
-                        // rules={[{ required: true, message: "Please enter SO Number" }]}
                         style={{ marginBottom: 0 }}
                     >
                         <Input
@@ -280,7 +351,7 @@ const SODetails = ({ onFetchData, fetchedData, isFetching, onDeleteRow }) => {
                         dataSource={fetchedData}
                         columns={columns}
                         pagination={{ pageSize: 10, size: "small" }}
-                        scroll={{ x: 1400 }}
+                        scroll={{ x: 1500 }}
                         style={{ borderRadius: "8px", overflow: "hidden" }}
                         rowClassName={(_, index) =>
                             index % 2 === 0 ? "lc-table-row-even" : "lc-table-row-odd"

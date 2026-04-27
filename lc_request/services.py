@@ -1,540 +1,277 @@
-# lc_request/services.py
-# ─────────────────────────────────────────────────────────────────────────────
-# ALL database and external-API logic lives here.  views.py only calls service
-# methods and returns the Response — it never queries the DB or calls
-# requests.post() directly.
-#
-# Three-table write flow (called from _save_so_details):
-#
-#   For each SO row in the payload:
-#
-#   1. LCSODetail.create()  → financial fields only
-#                              (interest_free_credit_days, interest_charges,
-#                               usance_period)
-#   2. SODetail.create()    → Masters snapshot fields
-#                              + FK  → LCRequest
-#                              + OneToOne → LCSODetail (created in step 1)
-#
-#   On a subsequent PATCH the old SODetail rows are deleted first.
-#   The CASCADE on SODetail.lc_so_detail automatically deletes the paired
-#   LCSODetail rows, so no manual LCSODetail cleanup is needed.
-#
-# WHY three tables instead of one flat table?
-#   SODetail   = Masters snapshot  (write-once, auditable, frozen at entry).
-#   LCSODetail = user-entered financials (editable, revisioned separately).
-#   Keeping them separate lets the LC team update financial data without
-#   touching the immutable snapshot, and allows future re-sync from Masters
-#   by replacing only SODetail rows without losing financial entries.
-# ─────────────────────────────────────────────────────────────────────────────
-
 import json
 import logging
-from datetime     import datetime
-from urllib.parse import urlencode
+from decimal import Decimal, InvalidOperation
+from datetime import datetime
 
 import requests
 import reversion
-from django.conf           import settings
 from django.core.paginator import Paginator
-from django.db.models      import Q
-from reversion.models      import Version
-from rest_framework        import status
+from django.db.models import Q
+from rest_framework import status
 from rest_framework.response import Response
 
-from .models      import LCRequest, LCSODetail, SODetail
-from .serializers import (
-    LCRequestSerializer,
-    LCRequestWriteSerializer,
-    VersionSummarySerializer,
-)
+from .models import LcRequest, LcDetails, LcFiles
+from .serializers import LCRequestListSerializer, LCRequestDetailSerializer
+from lc_request import Constants
 
 logger = logging.getLogger(__name__)
 
-# ── OCR API constants ─────────────────────────────────────────────────────────
-_OCR_URL          = "https://staging.amns.in/bot-ocr/api/v1/extract"
-_OCR_PROJECT_NAME = "LC PARK & ENTRY"
-_OCR_TIMEOUT_SECS = 60
+_INT_FIELDS = frozenset({"unance_period", "negotiation_days"})
+_DECIMAL_FIELDS = frozenset({"grace_value"})
 
-# OCR response key → LCRequest model field name.
-# Single source of truth for both _map_ocr_prediction() and the frontend.
-_OCR_FIELD_MAP: dict[str, str] = {
-    "Instrument_Number":          "instrument_number",
-    "Form_of_DOC":                "form_of_doc",
-    "Opening_Bank":               "opening_bank",
-    "Opening_Date":               "opening_date",
-    "Unance_Period":              "usance_period",   # OCR typo kept as-is
-    "Dispatch_Upto_Date":         "dispatch_upto_date",
-    "Negotiation_Days":           "negotiation_days",
-    "Expiry_Date":                "expiry_date",
-    "Place_TakeIn_charge":        "place_take_in_charge",
+_FIELD_MAP = {
+    "Instrument_Number": "instrument_number",
+    "instrument_number": "instrument_number",
+    "Form_of_DOC": "form_of_doc",
+    "form_of_doc": "form_of_doc",
+    "Opening_Bank": "opening_bank",
+    "opening_bank": "opening_bank",
+    "Opening_Date": "opening_date",
+    "opening_date": "opening_date",
+    "Unance_Period": "unance_period",
+    "usance_period": "unance_period",
+    "Dispatch_Upto_Date": "dispatch_upto_date",
+    "dispatch_upto_date": "dispatch_upto_date",
+    "Negotiation_Days": "negotiation_days",
+    "negotiation_days": "negotiation_days",
+    "Expiry_Date": "expiry_date",
+    "expiry_date": "expiry_date",
+    "Place_TakeIn_charge": "place_take_in_charge",
+    "place_take_in_charge": "place_take_in_charge",
     "Place_of_Final_Destination": "place_of_final_destination",
-    "Advising_Bank":              "advising_bank",
-    "ES":                         "es",
-    "ET":                         "et",
-    "ER":                         "er",
-    "Grace_Value":                "grace_value",
-    "Credit_Tolerance":           "percentage_credit_amount_tolerance",
-    "Cust_Name_Inv_Print":        "cust_name_inv_print",
-    "Customer_Name":              "customer_name",
-    "Clause_45A":                 "clause_45a",
-    "Incoterm":                   "incoterm",
-    "IMPS Remark":                "imps_remark",
-    "Additional_Condition_47A":   "additional_condition_46a",
-    "Clause78":                   "clause_78",
+    "place_of_final_destination": "place_of_final_destination",
+    "Advising_Bank": "advising_bank",
+    "advising_bank": "advising_bank",
+    "ES": "es", "es": "es",
+    "ET": "et", "et": "et",
+    "ER": "er", "er": "er",
+    "Grace_Value": "grace_value",
+    "grace_value": "grace_value",
+    "Credit_Tolerance": "percentage_credit_amount_tolerance",
+    "percentage_credit_amount_tolerance": "percentage_credit_amount_tolerance",
+    "Cust_Name_Inv_Print": "cust_name_inv_print",
+    "cust_name_inv_print": "cust_name_inv_print",
+    "Customer_Name": "customer_name",
+    "customer_name": "customer_name",
+    "Clause_45A": "clause_45a",
+    "clause_45a": "clause_45a",
+    "Incoterm": "incoterm",
+    "incoterm": "incoterm",
+    "IMPS Remark": "imps_remark",
+    "imps_remark": "imps_remark",
+    "Additional_Condition_47A": "additional_condition_46a",
+    "additional_condition_46a": "additional_condition_46a",
+    "Clause78": "clause_78",
+    "clause_78": "clause_78",
 }
-
-_OCR_BOOL_FIELDS: frozenset[str] = frozenset({"es", "et", "er"})
-_OCR_DATE_FIELDS: frozenset[str] = frozenset(
-    {"opening_date", "dispatch_upto_date", "expiry_date"}
-)
 
 
 class LCRequestService:
-    """
-    Business / persistence layer for all LC Request operations.
 
-    Each public method maps 1-to-1 to an HTTP endpoint in views.py.
-    Private helpers (``_`` prefix) are not called from views.
-    """
+    @staticmethod
+    def _coerce_int(val):
+        if val in (None, "", "Invalid Date", "null", "undefined"):
+            return None
+        try:
+            return int(val)
+        except Exception:
+            return None
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # PRIVATE: OCR field mapping
-    # ─────────────────────────────────────────────────────────────────────────
+    @staticmethod
+    def _coerce_decimal(val):
+        if val in (None, "", "Invalid Date", "null", "undefined"):
+            return None
+        try:
+            return Decimal(str(val))
+        except Exception:
+            return None
 
-    def _map_ocr_prediction(self, prediction: dict) -> dict:
-        """
-        Convert raw OCR API ``prediction`` keys to ``LCRequest`` model field
-        names and coerce types.
+    @staticmethod
+    def _coerce_date(val):
+        if not val or val in ("Invalid Date", "null", "undefined", ""):
+            return None
+        if isinstance(val, str):
+            # OCR format: 31.03.2026
+            if '.' in val:
+                try:
+                    return datetime.strptime(val, "%d.%m.%Y").date()
+                except ValueError:
+                    pass
+            # Frontend format: 2026-03-31
+            if '-' in val:
+                try:
+                    return datetime.strptime(val, "%Y-%m-%d").date()
+                except ValueError:
+                    pass
+        return None
 
-        Coercions applied:
-            Boolean fields — ``"yes"`` / ``"no"`` → ``True`` / ``False``
-            Date fields    — ``"DD.MM.YYYY"``     → ``datetime.date``
-
-        Args:
-            prediction: The ``prediction`` sub-dict from the OCR API response.
-
-        Returns:
-            Dict ready for ``LCRequest.objects.create(**mapped)``.
-        """
-        mapped: dict = {}
-
-        for ocr_key, model_field in _OCR_FIELD_MAP.items():
-            raw = prediction.get(ocr_key)
-            if raw is None or raw == "":
+    def _extract_lc_detail_fields(self, data) -> dict:
+        result = {}
+        for fe_key, model_field in _FIELD_MAP.items():
+            raw = data.get(fe_key)
+            if raw is None:
                 continue
 
-            if model_field in _OCR_BOOL_FIELDS:
-                mapped[model_field] = str(raw).lower() == "yes"
-
-            elif model_field in _OCR_DATE_FIELDS:
-                try:
-                    mapped[model_field] = datetime.strptime(raw, "%d.%m.%Y").date()
-                except (ValueError, TypeError):
-                    logger.warning(
-                        "OCR date parse failed: field=%s value=%r", model_field, raw
-                    )
+            if model_field in {"opening_date", "dispatch_upto_date", "expiry_date"}:
+                result[model_field] = self._coerce_date(raw)
+            elif model_field in _INT_FIELDS:
+                result[model_field] = self._coerce_int(raw)
+            elif model_field in _DECIMAL_FIELDS:
+                result[model_field] = self._coerce_decimal(raw)
             else:
-                mapped[model_field] = raw
+                result[model_field] = raw if raw not in ("", "Invalid Date", "null", "undefined") else None
+        return result
 
-        return mapped
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # PRIVATE: Three-table SO save
-    # ─────────────────────────────────────────────────────────────────────────
-
-    def _save_so_details(self, lc_instance: LCRequest, so_details_raw: str | None) -> None:
-        """
-        Persist SO rows using the three-table pattern.
-
-        Relationship diagram::
-
-            LCRequest  ──< SODetail  >── LCSODetail
-                           (FK)            (OneToOne)
-
-        Steps:
-
-        1. Delete all existing ``SODetail`` rows for *lc_instance*.
-           The ``on_delete=CASCADE`` on ``SODetail.lc_so_detail`` automatically
-           deletes the paired ``LCSODetail`` rows — no manual cleanup needed.
-
-        2. For each SO dict in the payload:
-           a. Create ``LCSODetail`` first (no FK to LCRequest; purely financial).
-           b. Create ``SODetail`` referencing both ``lc_instance`` and the
-              ``LCSODetail`` just created.
-
-        WHY create ``LCSODetail`` before ``SODetail``?
-          ``SODetail.lc_so_detail`` is a FK, so the ``LCSODetail`` row must
-          already have a PK before ``SODetail`` can reference it.
-
-        WHY delete-all-then-insert instead of per-row upsert?
-          The frontend always sends the *full* current SO list.  A full
-          replace is simpler and avoids partial-update edge cases (e.g. a row
-          the user removed from the list lingering in the DB).
-
-        Args:
-            lc_instance:    The parent ``LCRequest`` being saved.
-            so_details_raw: JSON string ``[{so_number, company_code, …}, …]``.
-                            Silently no-ops if ``None`` or unparseable.
-        """
+    @staticmethod
+    def _save_so_details(lc_instance: LcRequest, so_details_raw):
         if not so_details_raw:
             return
-
         try:
-            so_list = json.loads(so_details_raw)
-        except (json.JSONDecodeError, TypeError):
-            logger.warning("_save_so_details: unparseable so_details_raw — skipped")
+            so_list = json.loads(so_details_raw) if isinstance(so_details_raw, str) else so_details_raw
+        except Exception:
             return
-
         if not isinstance(so_list, list):
             return
 
-        # ── 1. Wipe old rows (CASCADE deletes linked LCSODetail too) ─────────
-        SODetail.objects.filter(lc_request=lc_instance).delete()
+        from masters.models.Sodata import Sodata
+        so_numbers = [row.get("so_number") for row in so_list if row.get("so_number")]
+        sodata_qs = Sodata.objects.filter(so_number__in=so_numbers)
+        lc_instance.so_data.set(sodata_qs)
 
-        # ── 2. Re-create from payload ─────────────────────────────────────────
-        for row in so_list:
-            cust_ref_date = row.get("cust_reference_date") or None
+    @staticmethod
+    def _find_y_entry(n_entry: LcDetails):
+        if not n_entry or not n_entry.instrument_number:
+            return None
+        return LcDetails.objects.filter(
+            instrument_number=n_entry.instrument_number,
+            extracted_flag='Y'
+        ).first()
 
-            # a) Financial record — standalone, no FK to LCRequest
-            lc_so_detail = LCSODetail.objects.create(
-                interest_free_credit_days = row.get("interest_free_credit_days"),
-                interest_charges          = row.get("interest_charges"),
-                usance_period             = row.get("usance_period"),
-            )
-
-            # b) Snapshot record — bridges LCRequest ↔ LCSODetail
-            SODetail.objects.create(
-                lc_request   = lc_instance,
-                lc_so_detail = lc_so_detail,
-
-                # Masters snapshot (frozen at entry time)
-                so_number           = row.get("so_number", ""),
-                company_code        = row.get("company_code"),
-                plant_code          = row.get("plant_code"),
-                customer_code       = row.get("customer_code"),
-                ship_to_party       = row.get("ship_to_party"),
-                so_value            = row.get("so_value"),
-                pyt_terms           = row.get("pyt_terms"),
-                remarks             = row.get("remarks"),
-                cust_reference      = row.get("cust_reference"),
-                cust_reference_date = cust_ref_date,
-                inco_terms          = row.get("inco_terms"),
-                inco_location       = row.get("inco_location"),
-                so_status           = row.get("status"),
-            )
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # PRIVATE: Sync first SO's master fields onto the LCRequest header
-    # ─────────────────────────────────────────────────────────────────────────
-
-    def _sync_header_from_first_so(self, lc_instance: LCRequest, so_list: list) -> None:
-        """
-        Denormalise the first SO's master snapshot onto the ``LCRequest``
-        header row for fast list-screen reads (avoids a JOIN every page load).
-
-        Args:
-            lc_instance: The parent ``LCRequest`` to update in-place.
-            so_list:     Parsed list of SO dicts from the frontend payload.
-        """
-        if not so_list:
-            return
-
-        first = so_list[0]
-        lc_instance.company_code       = first.get("company_code")
-        lc_instance.plant_code         = first.get("plant_code")
-        lc_instance.customer_code      = first.get("customer_code")
-        lc_instance.ship_to_party      = first.get("ship_to_party")
-        lc_instance.so_value           = first.get("so_value")
-        lc_instance.payment_terms      = first.get("pyt_terms")
-        lc_instance.special_remark     = first.get("remarks")
-        lc_instance.cust_ref_po_number = first.get("cust_reference")
-        lc_instance.cust_ref_po_date   = first.get("cust_reference_date") or None
-        lc_instance.save()
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # OCR — extract PDF data, persist draft, return OCR response + lc_id
-    # ─────────────────────────────────────────────────────────────────────────
-
-    def extract_and_save(self, request) -> Response:
-        """
-        1. Proxy PDF to external OCR engine.
-        2. Map prediction → ``LCRequest`` fields, persist as a draft inside a
-           reversion revision (Version 1 = raw OCR output).
-        3. Return full OCR payload + ``lc_id`` so the frontend switches
-           subsequent saves from POST (create) → PATCH (update same draft).
-
-        Args:
-            request: DRF ``Request`` with ``FILES["file"]``.
-        """
+    # ====================== OCR ======================
+    def extract_ocr_data(self, request) -> Response:
         uploaded_file = request.FILES.get("file")
         if not uploaded_file:
-            return Response(
-                {"error": "No file uploaded. Send the PDF as 'file'."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # ── 1. Forward PDF to OCR engine ──────────────────────────────────────
-        try:
-            ocr_response = requests.post(
-                _OCR_URL,
-                files={"file": (
-                    uploaded_file.name,
-                    uploaded_file.read(),
-                    uploaded_file.content_type,
-                )},
-                data={"project_name": _OCR_PROJECT_NAME},
-                timeout=_OCR_TIMEOUT_SECS,
-                verify=False,   # internal staging cert — remove in production
-            )
-        except requests.exceptions.Timeout:
-            return Response(
-                {"error": "OCR API timed out. Please try again."},
-                status=status.HTTP_504_GATEWAY_TIMEOUT,
-            )
-        except requests.exceptions.RequestException as exc:
-            logger.error("OCR API unreachable: %s", exc)
-            return Response(
-                {"error": f"Could not reach OCR API: {exc}"},
-                status=status.HTTP_502_BAD_GATEWAY,
-            )
+            return Response({"error": "No file uploaded"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            ocr_data = ocr_response.json()
-        except ValueError:
-            return Response(
-                {"error": "OCR API returned a non-JSON response."},
-                status=status.HTTP_502_BAD_GATEWAY,
+            ocr_resp = requests.post(
+                Constants.OCR_URL,
+                files={"file": (uploaded_file.name, uploaded_file.read(), uploaded_file.content_type)},
+                data={"project_name": Constants.OCR_PROJECT_NAME},
+                timeout=Constants.OCR_TIMEOUT_SECS,
+                verify=False,
             )
+            return Response(ocr_resp.json(), status=ocr_resp.status_code)
+        except Exception as e:
+            logger.error("OCR Error: %s", e)
+            return Response({"error": "OCR service unavailable"}, status=status.HTTP_502_BAD_GATEWAY)
 
-        # ── 2. Persist draft LCRequest ────────────────────────────────────────
-        prediction    = ocr_data.get("prediction", {})
-        mapped_fields = self._map_ocr_prediction(prediction)
+    # ====================== CREATE ======================
+    def create_lc_request(self, request) -> Response:
+        data = request.data
+        files = request.FILES
 
-        uploaded_file.seek(0)   # rewind — .read() moved the pointer to EOF
+        lc_fields = self._extract_lc_detail_fields(data)
 
         with reversion.create_revision():
-            lc_instance = LCRequest.objects.create(
-                status     = "draft",
-                attachment = uploaded_file,
-                **mapped_fields,
+            y_entry = LcDetails.objects.create(**lc_fields, extracted_flag='Y')
+            n_entry = LcDetails.objects.create(**lc_fields, extracted_flag='N')
+
+            lc_instance = LcRequest.objects.create(
+                lc_details=n_entry,
+                interest_free_credit_days=self._coerce_int(data.get("interest_free_credit_days")),
+                interest_charges=self._coerce_decimal(data.get("interest_charges")),
+                usance_period=self._coerce_int(data.get("usance_period")),
+                request_status=data.get("status", Constants.STATUS_DRAFT),
+                created_by=data.get("created_by", ""),
             )
-            reversion.set_comment("Version 1 — original OCR extraction")
 
-        logger.info("OCR draft created: LCRequest pk=%s", lc_instance.pk)
+            self._save_so_details(lc_instance, data.get("so_details"))
 
-        # ── 3. Return OCR payload + lc_id ─────────────────────────────────────
-        return Response(
-            {**ocr_data, "lc_id": lc_instance.pk},
-            status=ocr_response.status_code,
-        )
+            if uploaded_file := files.get("file"):
+                LcFiles.objects.create(
+                    file=uploaded_file,
+                    category=Constants.LC_DOCUMENT,
+                    status="active",
+                    password=data.get("password", ""),
+                    lc_details=y_entry.pk,
+                )
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # GET LIST
-    # ─────────────────────────────────────────────────────────────────────────
+            reversion.set_comment("Version 1 — initial save")
 
-    def get_lc_list(self, query_params) -> Response:
-        """Paginated LC Request list with optional search and status filter."""
-        queryset = LCRequest.objects.all().order_by("-created_date")
+        return Response(LCRequestDetailSerializer(lc_instance).data, status=status.HTTP_201_CREATED)
 
-        search = query_params.get("search")
-        if search:
-            queryset = queryset.filter(
-                Q(customer_code__icontains=search)
-                | Q(instrument_number__icontains=search)
-                | Q(status__icontains=search)
-                | Q(company_code__icontains=search)
-            )
+    # ====================== UPDATE ======================
+    def update_lc_request(self, request, pk: int) -> Response:
+        data = request.data
+        files = request.FILES
+
+        try:
+            lc_instance = LcRequest.objects.select_related("lc_details").get(pk=pk)
+        except LcRequest.DoesNotExist:
+            return Response({"error": "LC Request not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        lc_fields = self._extract_lc_detail_fields(data)
+
+        with reversion.create_revision():
+            n_entry = lc_instance.lc_details
+            for field, value in lc_fields.items():
+                setattr(n_entry, field, value)
+            n_entry.save()
+
+            if data.get("interest_free_credit_days") is not None:
+                lc_instance.interest_free_credit_days = self._coerce_int(data.get("interest_free_credit_days"))
+            if data.get("interest_charges") is not None:
+                lc_instance.interest_charges = self._coerce_decimal(data.get("interest_charges"))
+            if data.get("usance_period") is not None:
+                lc_instance.usance_period = self._coerce_int(data.get("usance_period"))
+            if data.get("status"):
+                lc_instance.request_status = data.get("status")
+            lc_instance.save()
+
+            if data.get("so_details"):
+                self._save_so_details(lc_instance, data.get("so_details"))
+
+            if uploaded_file := files.get("file"):
+                y_entry = self._find_y_entry(n_entry)
+                if y_entry:
+                    LcFiles.objects.create(
+                        file=uploaded_file,
+                        category=Constants.LC_ATTACHMENT,
+                        status="active",
+                        password=data.get("password", ""),
+                        lc_details=y_entry.pk,
+                    )
+
+            reversion.set_comment(f"Updated — status: {lc_instance.request_status}")
+
+        return Response(LCRequestDetailSerializer(lc_instance).data)
+
+    # ====================== LIST ======================
+    def get_lc_list(self, query_params):
+        qs = LcRequest.objects.prefetch_related("so_data").select_related("lc_details").order_by("-created_date")
+
+        if search := query_params.get("search"):
+            qs = qs.filter(
+                Q(lc_details__instrument_number__icontains=search) |
+                Q(request_status__icontains=search) |
+                Q(so_data__so_number__icontains=search)
+            ).distinct()
 
         if query_params.get("filter"):
-            filter_status = query_params.get("status")
-            if filter_status:
-                queryset = queryset.filter(status=filter_status)
+            if st := query_params.get("request_status"):
+                qs = qs.filter(request_status=st)
 
-        page_size = int(query_params.get("pageSize", 20))
-        page_no   = int(query_params.get("page", 1))
-        paginator = Paginator(queryset, page_size)
-        page_obj  = paginator.get_page(page_no)
+        paginator = Paginator(qs, int(query_params.get("pageSize", 20)))
+        page_obj = paginator.get_page(int(query_params.get("page", 1)))
 
-        serializer = LCRequestSerializer(page_obj.object_list, many=True)
+        serializer = LCRequestListSerializer(page_obj.object_list, many=True)
         return Response({"total": paginator.count, "results": serializer.data})
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # GET SINGLE
-    # ─────────────────────────────────────────────────────────────────────────
-
-    def get_lc_by_id(self, pk: int) -> Response:
-        """
-        Returns full LC Request detail including nested SO rows.
-
-        ``prefetch_related("so_details__lc_so_detail")`` fetches all
-        ``SODetail`` rows and their linked ``LCSODetail`` in two extra queries
-        instead of N+1 — important when many SOs are attached to one LC.
-        """
+    # ====================== DETAIL ======================
+    def get_lc_by_id(self, pk: int):
         try:
-            instance = (
-                LCRequest.objects
-                .prefetch_related("so_details__lc_so_detail")
-                .get(pk=pk)
-            )
-        except LCRequest.DoesNotExist:
-            return Response(
-                {"error": "LC Request not found."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        return Response(LCRequestSerializer(instance).data)
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # CREATE  (POST)
-    # ─────────────────────────────────────────────────────────────────────────
-
-    def create_lc_request(self, request) -> Response:
-        """Create a new ``LCRequest`` and record Version 1 in reversion."""
-        data       = request.data
-        serializer = LCRequestWriteSerializer(data=data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        with reversion.create_revision():
-            lc_instance = serializer.save()
-
-            so_details_raw = data.get("so_details")
-            if so_details_raw:
-                try:
-                    so_list = json.loads(so_details_raw)
-                    self._sync_header_from_first_so(lc_instance, so_list)
-                except (json.JSONDecodeError, TypeError):
-                    pass
-                self._save_so_details(lc_instance, so_details_raw)
-
-            reversion.set_user(request.user)
-            reversion.set_comment("Version 1 — initial manual save")
-
-        return Response(
-            LCRequestSerializer(lc_instance).data,
-            status=status.HTTP_201_CREATED,
-        )
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # UPDATE  (PATCH)
-    # ─────────────────────────────────────────────────────────────────────────
-
-    def update_lc_request(self, request, pk: int) -> Response:
-        """
-        Partial update — only fields in ``request.data`` are changed.
-        Creates a new reversion ``Version`` so every edit is tracked.
-        """
-        data = request.data
-
-        try:
-            instance = LCRequest.objects.get(pk=pk)
-        except LCRequest.DoesNotExist:
-            return Response(
-                {"error": "LC Request not found."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        serializer = LCRequestWriteSerializer(instance, data=data, partial=True)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        with reversion.create_revision():
-            lc_instance = serializer.save()
-
-            so_details_raw = data.get("so_details")
-            if so_details_raw:
-                try:
-                    so_list = json.loads(so_details_raw)
-                    self._sync_header_from_first_so(lc_instance, so_list)
-                except (json.JSONDecodeError, TypeError):
-                    pass
-                self._save_so_details(lc_instance, so_details_raw)
-
-            reversion.set_user(request.user)
-            reversion.set_comment(
-                f"Updated by {request.user} — status: {data.get('status', instance.status)}"
-            )
-
-        return Response(LCRequestSerializer(lc_instance).data)
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # VERSION HISTORY
-    # ─────────────────────────────────────────────────────────────────────────
-
-    def get_version_history(self, pk: int) -> Response:
-        """Returns all saved versions of an ``LCRequest``, newest first."""
-        try:
-            instance = LCRequest.objects.get(pk=pk)
-        except LCRequest.DoesNotExist:
-            return Response(
-                {"error": "LC Request not found."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        versions = (
-            Version.objects
-            .get_for_object(instance)
-            .select_related("revision__user")
-        )
-
-        history = [
-            {
-                "version_id":   v.pk,
-                "revision_id":  v.revision.pk,
-                "date_created": v.revision.date_created,
-                "user":         str(v.revision.user) if v.revision.user else "system",
-                "comment":      v.revision.comment or "",
-                "field_dict":   v.field_dict,
-            }
-            for v in versions
-        ]
-
-        return Response(history)
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # SO LOOKUP — proxy to Masters API
-    # ─────────────────────────────────────────────────────────────────────────
-
-    def get_so_details(self, request, so_number: str) -> Response:
-        """
-        Forward an SO lookup to the Masters service and return its response.
-
-        Args:
-            request:   DRF ``Request`` (used for scheme/host and auth header).
-            so_number: SO number string to look up.
-        """
-        if not so_number:
-            return Response(
-                {"error": "so_number is required."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        prefix       = getattr(settings, "PROJECT_API_PREFIX",      "lcpark")
-        master_route = getattr(settings, "MASTERS_ROUTE",            "master")
-        app_model    = getattr(settings, "MASTERS_SODATA_APP_MODEL", "Master.Sodata")
-
-        base = f"{request.scheme}://{request.get_host()}"
-        qs   = urlencode({
-            "page":      1,
-            "pageSize":  20,
-            "so_number": so_number,
-            "filter":    1,
-        })
-        url = f"{base}/{prefix}/{master_route}/{app_model}/list?{qs}"
-
-        headers = {
-            "Authorization": request.META.get("HTTP_AUTHORIZATION", ""),
-            "Accept":        "application/json",
-            "source":        "workflow",
-            "req":           "list",
-        }
-
-        try:
-            r    = requests.get(url, headers=headers, timeout=15)
-            data = r.json()
-            return Response(data, status=r.status_code)
-        except Exception as exc:
-            logger.error("Masters API error for SO %s: %s", so_number, exc)
-            return Response(
-                {"error": f"Upstream error: {exc}"},
-                status=status.HTTP_502_BAD_GATEWAY,
-            )
+            instance = LcRequest.objects.select_related("lc_details").prefetch_related("so_data").get(pk=pk)
+            return Response(LCRequestDetailSerializer(instance).data)
+        except LcRequest.DoesNotExist:
+            return Response({"error": "LC Request not found."}, status=status.HTTP_404_NOT_FOUND)

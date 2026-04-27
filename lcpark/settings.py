@@ -205,7 +205,7 @@ DISPLAY_MODELS = {
 }
 
 DISPLAY_MODEL_FIELDS = {
-    'sodata': ['so_id','so_number','company_code', 'plant_code', 'customer_code', 'ship_to_party', 'so_value', 'pyt_terms', 'remarks', 'cust_reference', 'cust_reference_date', 'inco_terms', 'inco_location', 'status'],
+    'sodata': ['so_id','so_number', 'plant_code', 'customer_code', 'ship_to_party', 'so_value', 'pyt_terms', 'remarks', 'cust_reference', 'cust_reference_date', 'inco_terms', 'inco_location', 'status'],
 }
 
 AUTO_GENERATION_SECTIONS = ['MASTERS']
