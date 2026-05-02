@@ -13,10 +13,12 @@ FILE_CATEGORIES = [LC_DOCUMENT, LC_ATTACHMENT]
 # ── Request statuses ──────────────────────────────────────────────────────────
 STATUS_DRAFT     = 'draft'
 STATUS_SUBMITTED = 'submitted'
+STATUS_SYNCED    = "synced"
 
 STATUS_CHOICES = [
     (STATUS_DRAFT,     'Draft'),
     (STATUS_SUBMITTED, 'Submitted'),
+    (STATUS_SYNCED,    'Synced'),
 ]
 
 # ── OCR API ───────────────────────────────────────────────────────────────────
@@ -67,3 +69,15 @@ LC_DETAIL_FIELDS: list[str] = list(OCR_FIELD_MAP.values())
 ALLOWED_FILE_EXTENSIONS = [
     'application/pdf'
 ]
+
+SAP_BASE_URL = "https://vhnmwbadci.sap.myamns.in:44300"
+SAP_CLIENT = "150"
+SAP_USER = "RFC_AUCTION"
+SAP_PASSWORD = "Welcome@987654321"
+
+SAP_LC_URL = (
+    f"{SAP_BASE_URL}/sap/opu/odata/sap/"
+    f"ZFI_DOMESTIC_LC_REPLICATION_SRV/"
+    f"ZFI_DOMESTIC_LC_POSTSet"
+    f"?sap-client={SAP_CLIENT}"
+)

@@ -58,6 +58,8 @@ class LCRequestListSerializer(serializers.ModelSerializer):
             "expiry_date", "dispatch_upto_date", "usance_period",
             "negotiation_days", "place_take_in_charge", "customer_name",
             "cust_name_inv_print", "grace_value", "incoterm",
+            # SAP sync result fields
+            "inward_no", "lc_ref_no",
         ]
 
     def get_so_number(self, obj):
@@ -111,20 +113,6 @@ class LCRequestListSerializer(serializers.ModelSerializer):
     def get_incoterm(self, obj):
         return obj.lc_details.incoterm if obj.lc_details else None
 
-    def get_so_number(self, obj):
-        nums = [s.so_number for s in obj.so_data.all() if s.so_number]
-        return ", ".join(nums) if nums else "—"
-
-    def get_customer_code(self, obj):
-        so = obj.so_data.first()
-        return so.customer_code if so else "—"
-
-    def get_so_value(self, obj):
-        from django.db.models import Sum
-        agg = obj.so_data.aggregate(total=Sum('so_value'))
-        total = agg.get('total')
-        return str(total) if total is not None else "0"
-
 
 class LCRequestDetailSerializer(serializers.ModelSerializer):
     status = serializers.CharField(source='request_status', read_only=True)
@@ -139,6 +127,8 @@ class LCRequestDetailSerializer(serializers.ModelSerializer):
             "id", "status", "updated_date",
             "interest_free_credit_days", "interest_charges", "usance_period",
             "created_by", "created_date", "so_details", "attachment", "password",
+            # SAP sync result fields — returned to the frontend after a successful sync
+            "inward_no", "lc_ref_no",
         ]
 
     def to_representation(self, instance):

@@ -32,6 +32,24 @@ class LcRequest(BaseModel):
         choices=Constants.STATUS_CHOICES,
     )
 
+    # ── SAP sync result fields ────────────────────────────────────────────────
+    # Populated from the SAP OData response after a successful sync.
+    # Return string format: "Inward number <INWARD_NO> created successfully against LC number <LC_REF_NO>"
+    inward_no = models.CharField(
+        db_column='INWARD_NO',
+        max_length=50,
+        blank=True,
+        null=True,
+        help_text="Inward number returned by SAP after successful LC sync.",
+    )
+    lc_ref_no = models.CharField(
+        db_column='LC_REF_NO',
+        max_length=50,
+        blank=True,
+        null=True,
+        help_text="LC reference number (document number) returned by SAP after successful sync.",
+    )
+
     def __str__(self):
         return f"LCRequest #{self.pk}"
 

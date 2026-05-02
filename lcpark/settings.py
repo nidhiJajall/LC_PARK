@@ -110,16 +110,34 @@ WSGI_APPLICATION = 'lcpark.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+
+USE_SQLITE_AS_DEFAULT = os.getenv("USE_SQLITE_AS_DEFAULT", "false").lower() == "true"
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'LC_PARK',  # Your PostgreSQL DB name
-        'USER': 'postgres',  # Your DB username
-        'PASSWORD': 'admin',  # Your DB password
-        'HOST': 'localhost',  # Or your DB server IP
-        'PORT': '5432',  # Default PostgreSQL port
+    "default": (
+        {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+        if USE_SQLITE_AS_DEFAULT
+        else {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "LC_PARK",
+            "USER": "postgres",
+            "PASSWORD": "admin",
+            "HOST": "localhost",
+            "PORT": "5432",
+        }
+    ),
+
+    # ✅ keep SQLite explicit as well (optional but useful)
+    "sqlite": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
@@ -201,11 +219,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MODEL_VALIDATORS = {}
 
 DISPLAY_MODELS = {
-    'sodata':'Sodata'
+    'sodata':'Sodata',
+    'itemdata':'Itemdata',
 }
 
 DISPLAY_MODEL_FIELDS = {
     'sodata': ['so_id','so_number', 'plant_code', 'customer_code', 'ship_to_party', 'so_value', 'pyt_terms', 'remarks', 'cust_reference', 'cust_reference_date', 'inco_terms', 'inco_location', 'status'],
+    'itemdata': ['so_id', 'so_number', 'item_number', 'material_no', 'material_qty', 'unit', 'material_price', 'matl_value'],
 }
 
 AUTO_GENERATION_SECTIONS = ['MASTERS']
@@ -214,8 +234,14 @@ EXTRA_USER_META = {
     'MASTERS': [
         {
             'app': 'masters',
-            'title': 'MASTER'
-        }
+            'model': 'sodata',
+            'title': 'SO Data'
+        },
+        {
+            'app': 'masters',
+            'model': 'itemdata',
+            'title': 'Item Data'
+        },
     ],
     'lc_request': [                          # ← this key must match ScreenRouters.js
         {
@@ -247,6 +273,7 @@ MASTERS_APP_RBAC = 'masters'
 
 APPLY_SEARCH_MODEL_FIELDS = {
     'sodata': ['so_id','so_number','company_code', 'plant_code', 'customer_code', 'ship_to_party', 'so_value', 'pyt_terms', 'remarks', 'cust_reference', 'cust_reference_date', 'inco_terms', 'inco_location'],
+    'itemdata': ['so_id', 'so_number', 'item_number', 'material_no', 'material_qty', 'unit', 'material_price', 'matl_value'],
 }
 
 

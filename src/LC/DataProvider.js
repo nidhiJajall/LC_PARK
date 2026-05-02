@@ -60,6 +60,27 @@ const dataProvider = {
             ...STANDARD_METHOD_OPTIONS,
         });
     },
+
+    syncLCToSAP(url) {
+        return fetch(`${BASE_URL}${url}`, {
+            method : "POST",
+            headers: {
+                // Include your Django session / CSRF cookie headers here
+                // if your project uses DRF SessionAuthentication.
+                // Example for Django CSRF:
+                //   "X-CSRFToken": getCookie("csrftoken"),
+                "Content-Type": "application/json",
+            },
+        });
+    },
+
+    getSapPayloadPreview: (url) => {
+      return fetch(`${BASE_URL}${url}`, {
+        method: "GET",
+        credentials: "include",
+      });
+    },
+
 };
 
 export default dataProvider;

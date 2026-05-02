@@ -5,7 +5,7 @@ from reversion import revisions as reversion
 
 
 class Itemdata(BaseModel):
-    item_id = models.AutoField(primary_key=True, db_column='SO_ID')
+    so_id = models.AutoField(primary_key=True, db_column='SO_ID')
 
     so_number = models.CharField(db_column='SO_NUMBER', max_length=20, blank=True, null=True)
     item_number = models.CharField(db_column='ITEM_NUMBER', max_length=10)
@@ -16,7 +16,7 @@ class Itemdata(BaseModel):
     matl_value = models.CharField(db_column='MATL_VALUE', max_length=20)
 
     status = models.CharField(db_column='STATUS', max_length=80, default='Active')
-    name = AliasField(db_column='COMPANY_CODE', blank=True, null=True)
+    # name = AliasField(db_column='COMPANY_CODE', blank=True, null=True)
 
     class UI_Meta:
         ui_specs = {
@@ -28,6 +28,16 @@ class Itemdata(BaseModel):
                     "sectionlabel": "ITEM-LEVEL SO DATA",
                     "cols": 2,
                     "colComponent": [
+                        {
+                            "label": "SO Number",
+                            "decorator": "so_number",
+                            "type": "textbox",
+                            "required": "true",
+                            "message": "SO Number is required.",
+                            "id": "so_number",
+                            "placeholder": "Enter SO Number",
+                            "disabled": False
+                        },
                         {
                             "label": "Item Number",
                             "decorator": "item_number",

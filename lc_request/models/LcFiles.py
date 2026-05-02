@@ -1,9 +1,7 @@
 import os
-
 from django.db import models
 from django.conf import settings
 from reversion import revisions as reversion
-
 from api.models import BaseModel
 from lc_request import Constants
 from lc_request.functions import handle_file_upload_path
@@ -28,14 +26,17 @@ class LcFiles(BaseModel):
             s3_service = S3Service(settings.S3_BUCKET_NAME, os.path.join(settings.BASE_DIR, 'logs'))
             s3_service.upload(file_data, store_location, 0, 0)
             self.file = store_location
-            super().save(*args, **kwargs)
-        except Exception:
-            # Let Django handle the file save normally via upload_to
-            # This means file.url will work correctly with MEDIA_URL
+        except Exception as e:
+            from django.core.files.storage import FileSystemStorage
+            [file_location, file_name] = store_location.rsplit('/', 1)
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, file_location))
+            fs.save(file_name, file_data)
+            self.file = store_location
+        finally:
             super().save(*args, **kwargs)
 
     class Meta:
-        db_table = 'TRANS_LC_FILES'
+        db_table = "TRANS_LC_FILES"
         app_label = Constants.APP_LABEL
 
 

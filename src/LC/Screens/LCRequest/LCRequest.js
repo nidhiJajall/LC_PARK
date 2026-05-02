@@ -107,6 +107,19 @@ const safeParseDateISO = (val) => {
 };
 
 
+const normalizePODate = (val) => {
+    if (!val || val === "—") return "";
+
+    const d1 = dayjs(val, "DD/MM/YYYY", true);
+    if (d1.isValid()) return d1.format("YYYY-MM-DD");
+
+    const d2 = dayjs(val, "YYYY-MM-DD", true);
+    if (d2.isValid()) return d2.format("YYYY-MM-DD");
+
+    return "";
+};
+
+
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
@@ -338,7 +351,9 @@ const LCRequest = () => {
                             }
 
                             // ADD-ON 1: PO Date (cust_reference_date) must match
-                            if (newRow.cust_reference_date !== first.cust_reference_date) {
+                            const newPOD = normalizePODate(newRow.cust_reference_date);
+                            const firstPOD = normalizePODate(first.cust_reference_date);
+                            if (newPOD !== firstPOD) {
                                 openNotification(
                                     "error",
                                     "PO Date Mismatch",
@@ -346,6 +361,7 @@ const LCRequest = () => {
                                 );
                                 return;
                             }
+
                         }
 
                         setFetchedData((prev) => [...prev, newRow]);
@@ -369,26 +385,48 @@ const LCRequest = () => {
     const handleSyncToSAP = () => {
         Modal.confirm({
             title  : "Sync to SAP",
-            content: "Are you sure you want to sync this LC Request to SAP?",
+            content: (
+                <span>
+                    This will post LC <strong>#{editId}</strong> to SAP.
+                    Make sure the record is saved before syncing.
+                </span>
+            ),
             okText        : "Yes, Sync",
             cancelText    : "Cancel",
             okButtonProps : { style: { background: "#1890ff", borderColor: "#1890ff" } },
             onOk: () => {
                 setShowProgress(true);
-                dataProvider.syncLCToSAP(`${LC_API_PATH}${editId}/sync_to_sap/`)
-                    .then((res) => {
+
+                // dataProvider.syncLCToSAP must issue a  POST  request.
+                // If your DataProvider only does GET for this method, change it to:
+                //
+                //   fetch(`${LC_API_PATH}${editId}/sync_to_sap/`, { method: "POST" })
+                //
+                dataProvider
+                    .syncLCToSAP(`${LC_API_PATH}${editId}/sync_to_sap/`)
+                    .then((res) => res.json().then((body) => ({ ok: res.ok, body })))
+                    .then(({ ok, body }) => {
                         setShowProgress(false);
-                        if (res.ok) {
-                            openNotification("success", "Synced", "LC Request synced to SAP successfully.");
-                        } else {
-                            res.json().then((err) =>
-                                openNotification("error", "Sync Failed", err.message || "Something went wrong")
+                        if (ok) {
+                            openNotification(
+                                "success",
+                                "Synced to SAP",
+                                body.message || "LC Request posted to SAP successfully."
                             );
+                        } else {
+                            // Show the SAP error message if present
+                            const sapMsg =
+                                (body.sap_response?.error?.message?.value) ||
+                                (typeof body.sap_response === "string" ? body.sap_response : null) ||
+                                body.error ||
+                                "SAP sync failed. Check server logs.";
+
+                            openNotification("error", "Sync Failed", sapMsg);
                         }
                     })
                     .catch(() => {
                         setShowProgress(false);
-                        openNotification("error", "Error", "Error connecting to server");
+                        openNotification("error", "Network Error", "Could not reach the server. Please try again.");
                     });
             },
         });
