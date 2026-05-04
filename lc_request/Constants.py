@@ -1,19 +1,22 @@
 """
-Module to store LC app-level constants.
+App-level constants for the lc_request module.
+
+All runtime secrets (SAP credentials, OCR URL) are read from my_secrets.secrets
+so nothing sensitive is committed to source control.
 """
+from my_secrets import secrets
 
 APP_LABEL = 'lc_request'
 
 # ── File categories ───────────────────────────────────────────────────────────
-LC_DOCUMENT   = 'LC_DOCUMENT'    # The original LC PDF uploaded for OCR
-LC_ATTACHMENT = 'LC_ATTACHMENT'  # Any other supporting attachment
-
+LC_DOCUMENT   = 'LC_DOCUMENT'
+LC_ATTACHMENT = 'LC_ATTACHMENT'
 FILE_CATEGORIES = [LC_DOCUMENT, LC_ATTACHMENT]
 
 # ── Request statuses ──────────────────────────────────────────────────────────
 STATUS_DRAFT     = 'draft'
 STATUS_SUBMITTED = 'submitted'
-STATUS_SYNCED    = "synced"
+STATUS_SYNCED    = 'synced'
 
 STATUS_CHOICES = [
     (STATUS_DRAFT,     'Draft'),
@@ -22,18 +25,18 @@ STATUS_CHOICES = [
 ]
 
 # ── OCR API ───────────────────────────────────────────────────────────────────
-OCR_URL          = "https://staging.amns.in/bot-ocr/api/v1/extract"
-OCR_PROJECT_NAME = "LC PARK & ENTRY"
-OCR_TIMEOUT_SECS = 60
+OCR_URL          = secrets.LC_OCR_URL
+OCR_PROJECT_NAME = secrets.LC_OCR_PROJECT_NAME
+OCR_TIMEOUT_SECS = int(secrets.LC_OCR_TIMEOUT_SECS)
 
-# Maps raw OCR response key → LCDetails model field name.
-# Single source of truth used by both services and the frontend mapping comment.
+# Maps raw OCR response key → LcDetails model field name (single source of truth).
+# services.py and sap_services.py both import from here — do NOT duplicate this map.
 OCR_FIELD_MAP: dict[str, str] = {
     "Instrument_Number":          "instrument_number",
     "Form_of_DOC":                "form_of_doc",
     "Opening_Bank":               "opening_bank",
     "Opening_Date":               "opening_date",
-    "Unance_Period":              "unance_period",  # OCR typo preserved intentionally
+    "Unance_Period":              "unance_period",    # OCR typo preserved intentionally
     "Dispatch_Upto_Date":         "dispatch_upto_date",
     "Negotiation_Days":           "negotiation_days",
     "Expiry_Date":                "expiry_date",
@@ -54,6 +57,17 @@ OCR_FIELD_MAP: dict[str, str] = {
     "Clause78":                   "clause_78",
 }
 
+# Extended map: also accepts already-normalised model field names as keys.
+# Used by services._extract_lc_detail_fields() for both OCR payloads and
+# direct frontend PATCH requests (which send model field names, not OCR keys).
+FULL_FIELD_MAP: dict[str, str] = {
+    **OCR_FIELD_MAP,
+    # model field name aliases (pass-through)
+    **{v: v for v in OCR_FIELD_MAP.values()},
+    # legacy / alternate spellings seen in frontend payloads
+    "usance_period": "unance_period",
+}
+
 # Fields that must be coerced to bool ("yes"/"no" → True/False)
 OCR_BOOL_FIELDS: frozenset = frozenset({"es", "et", "er"})
 
@@ -62,18 +76,17 @@ OCR_DATE_FIELDS: frozenset = frozenset(
     {"opening_date", "dispatch_upto_date", "expiry_date"}
 )
 
-# All editable LC detail field names (for extracted_flag comparison)
+# All editable LC detail field names (used for extracted_flag comparison)
 LC_DETAIL_FIELDS: list[str] = list(OCR_FIELD_MAP.values())
 
 # ── Allowed file types ────────────────────────────────────────────────────────
-ALLOWED_FILE_EXTENSIONS = [
-    'application/pdf'
-]
+ALLOWED_FILE_EXTENSIONS = ['application/pdf']
 
-SAP_BASE_URL = "https://vhnmwbadci.sap.myamns.in:44300"
-SAP_CLIENT = "150"
-SAP_USER = "RFC_AUCTION"
-SAP_PASSWORD = "Welcome@987654321"
+# ── SAP OData credentials ─────────────────────────────────────────────────────
+SAP_BASE_URL = secrets.SAP_BASE_URL
+SAP_CLIENT   = secrets.SAP_CLIENT
+SAP_USER     = secrets.SAP_USER
+SAP_PASSWORD = secrets.SAP_PASSWORD
 
 SAP_LC_URL = (
     f"{SAP_BASE_URL}/sap/opu/odata/sap/"

@@ -1,6 +1,12 @@
+"""
+Service layer for the lc_request module.
+
+Handles OCR extraction, LC Request CRUD, and list/detail retrieval.
+All DB writes use django-reversion for full audit history.
+"""
 import json
 import logging
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 from datetime import datetime
 
 import requests
@@ -16,70 +22,28 @@ from lc_request import Constants
 
 logger = logging.getLogger(__name__)
 
-_INT_FIELDS = frozenset({"unance_period", "negotiation_days"})
+_INT_FIELDS     = frozenset({"unance_period", "negotiation_days"})
 _DECIMAL_FIELDS = frozenset({"grace_value"})
-
-_FIELD_MAP = {
-    "Instrument_Number": "instrument_number",
-    "instrument_number": "instrument_number",
-    "Form_of_DOC": "form_of_doc",
-    "form_of_doc": "form_of_doc",
-    "Opening_Bank": "opening_bank",
-    "opening_bank": "opening_bank",
-    "Opening_Date": "opening_date",
-    "opening_date": "opening_date",
-    "Unance_Period": "unance_period",
-    "usance_period": "unance_period",
-    "Dispatch_Upto_Date": "dispatch_upto_date",
-    "dispatch_upto_date": "dispatch_upto_date",
-    "Negotiation_Days": "negotiation_days",
-    "negotiation_days": "negotiation_days",
-    "Expiry_Date": "expiry_date",
-    "expiry_date": "expiry_date",
-    "Place_TakeIn_charge": "place_take_in_charge",
-    "place_take_in_charge": "place_take_in_charge",
-    "Place_of_Final_Destination": "place_of_final_destination",
-    "place_of_final_destination": "place_of_final_destination",
-    "Advising_Bank": "advising_bank",
-    "advising_bank": "advising_bank",
-    "ES": "es", "es": "es",
-    "ET": "et", "et": "et",
-    "ER": "er", "er": "er",
-    "Grace_Value": "grace_value",
-    "grace_value": "grace_value",
-    "Credit_Tolerance": "percentage_credit_amount_tolerance",
-    "percentage_credit_amount_tolerance": "percentage_credit_amount_tolerance",
-    "Cust_Name_Inv_Print": "cust_name_inv_print",
-    "cust_name_inv_print": "cust_name_inv_print",
-    "Customer_Name": "customer_name",
-    "customer_name": "customer_name",
-    "Clause_45A": "clause_45a",
-    "clause_45a": "clause_45a",
-    "Incoterm": "incoterm",
-    "incoterm": "incoterm",
-    "IMPS Remark": "imps_remark",
-    "imps_remark": "imps_remark",
-    "Additional_Condition_47A": "additional_condition_46a",
-    "additional_condition_46a": "additional_condition_46a",
-    "Clause78": "clause_78",
-    "clause_78": "clause_78",
-}
+_NULL_SENTINELS = frozenset({"", "Invalid Date", "null", "undefined"})
 
 
 class LCRequestService:
+    """Service class for all LcRequest business operations."""
 
     @staticmethod
     def _coerce_int(val):
-        if val in (None, "", "Invalid Date", "null", "undefined"):
+        """Return int or None; treats null sentinels as None."""
+        if val in _NULL_SENTINELS or val is None:
             return None
         try:
             return int(val)
-        except Exception:
+        except (TypeError, ValueError):
             return None
 
     @staticmethod
     def _coerce_decimal(val):
-        if val in (None, "", "Invalid Date", "null", "undefined"):
+        """Return Decimal or None; treats null sentinels as None."""
+        if val in _NULL_SENTINELS or val is None:
             return None
         try:
             return Decimal(str(val))
@@ -88,16 +52,15 @@ class LCRequestService:
 
     @staticmethod
     def _coerce_date(val):
-        if not val or val in ("Invalid Date", "null", "undefined", ""):
+        """Parse OCR (DD.MM.YYYY) or frontend (YYYY-MM-DD) date strings. Returns date or None."""
+        if not val or val in _NULL_SENTINELS:
             return None
         if isinstance(val, str):
-            # OCR format: 31.03.2026
             if '.' in val:
                 try:
                     return datetime.strptime(val, "%d.%m.%Y").date()
                 except ValueError:
                     pass
-            # Frontend format: 2026-03-31
             if '-' in val:
                 try:
                     return datetime.strptime(val, "%Y-%m-%d").date()
@@ -105,54 +68,64 @@ class LCRequestService:
                     pass
         return None
 
-    def _extract_lc_detail_fields(self, data) -> dict:
+    def _extract_lc_detail_fields(self, data: dict) -> dict:
+        """
+        Map incoming request keys to LcDetails model fields with type coercion.
+        Uses Constants.FULL_FIELD_MAP — the single source of truth for key→field mapping.
+        """
         result = {}
-        for fe_key, model_field in _FIELD_MAP.items():
+        for fe_key, model_field in Constants.FULL_FIELD_MAP.items():
             raw = data.get(fe_key)
             if raw is None:
                 continue
-
-            if model_field in {"opening_date", "dispatch_upto_date", "expiry_date"}:
+            if model_field in Constants.OCR_DATE_FIELDS:
                 result[model_field] = self._coerce_date(raw)
             elif model_field in _INT_FIELDS:
                 result[model_field] = self._coerce_int(raw)
             elif model_field in _DECIMAL_FIELDS:
                 result[model_field] = self._coerce_decimal(raw)
             else:
-                result[model_field] = raw if raw not in ("", "Invalid Date", "null", "undefined") else None
+                result[model_field] = raw if raw not in _NULL_SENTINELS else None
         return result
 
     @staticmethod
     def _save_so_details(lc_instance: LcRequest, so_details_raw):
+        """Resolve SO numbers from request data and set the M2M relation."""
         if not so_details_raw:
             return
         try:
             so_list = json.loads(so_details_raw) if isinstance(so_details_raw, str) else so_details_raw
         except Exception:
+            logger.warning('Could not parse so_details for LcRequest #%s', lc_instance.pk)
             return
         if not isinstance(so_list, list):
             return
 
         from masters.models.Sodata import Sodata
         so_numbers = [row.get("so_number") for row in so_list if row.get("so_number")]
-        sodata_qs = Sodata.objects.filter(so_number__in=so_numbers)
+        sodata_qs  = Sodata.objects.filter(so_number__in=so_numbers)
         lc_instance.so_data.set(sodata_qs)
+        logger.info('Set %d SO(s) on LcRequest #%s', sodata_qs.count(), lc_instance.pk)
 
     @staticmethod
     def _find_y_entry(n_entry: LcDetails):
+        """Return the Y (OCR) LcDetails entry matching this N entry's instrument number."""
         if not n_entry or not n_entry.instrument_number:
             return None
         return LcDetails.objects.filter(
             instrument_number=n_entry.instrument_number,
-            extracted_flag='Y'
+            extracted_flag='Y',
         ).first()
 
-    # ====================== OCR ======================
+    # ── OCR ───────────────────────────────────────────────────────────────────
+
     def extract_ocr_data(self, request) -> Response:
+        """Forward the uploaded PDF to the OCR service and return its response."""
         uploaded_file = request.FILES.get("file")
         if not uploaded_file:
             return Response({"error": "No file uploaded"}, status=status.HTTP_400_BAD_REQUEST)
 
+        logger.info('OCR extraction requested for file: %s', uploaded_file.name)
         try:
             ocr_resp = requests.post(
                 Constants.OCR_URL,
@@ -161,16 +134,18 @@ class LCRequestService:
                 timeout=Constants.OCR_TIMEOUT_SECS,
                 verify=False,
             )
+            logger.info('OCR service responded with status %s', ocr_resp.status_code)
             return Response(ocr_resp.json(), status=ocr_resp.status_code)
-        except Exception as e:
-            logger.error("OCR Error: %s", e)
+        except Exception as exc:
+            logger.error('OCR service error: %s', exc)
             return Response({"error": "OCR service unavailable"}, status=status.HTTP_502_BAD_GATEWAY)
 
-    # ====================== CREATE ======================
-    def create_lc_request(self, request) -> Response:
-        data = request.data
-        files = request.FILES
+    # ── CREATE ────────────────────────────────────────────────────────────────
 
+    def create_lc_request(self, request) -> Response:
+        """Create a new LcRequest with paired Y/N LcDetails entries and optional file."""
+        data  = request.data
+        files = request.FILES
         lc_fields = self._extract_lc_detail_fields(data)
 
         with reversion.create_revision():
@@ -199,16 +174,20 @@ class LCRequestService:
 
             reversion.set_comment("Version 1 — initial save")
 
+        logger.info('Created LcRequest #%s (status: %s)', lc_instance.pk, lc_instance.request_status)
         return Response(LCRequestDetailSerializer(lc_instance).data, status=status.HTTP_201_CREATED)
 
-    # ====================== UPDATE ======================
+    # ── UPDATE ────────────────────────────────────────────────────────────────
+
     def update_lc_request(self, request, pk: int) -> Response:
-        data = request.data
+        """Update an existing LcRequest, its N-entry details, SO links, and optional file."""
+        data  = request.data
         files = request.FILES
 
         try:
             lc_instance = LcRequest.objects.select_related("lc_details").get(pk=pk)
         except LcRequest.DoesNotExist:
+            logger.warning('LcRequest #%s not found for update', pk)
             return Response({"error": "LC Request not found."}, status=status.HTTP_404_NOT_FOUND)
 
         lc_fields = self._extract_lc_detail_fields(data)
@@ -243,13 +222,21 @@ class LCRequestService:
                         lc_details=y_entry.pk,
                     )
 
-            reversion.set_comment(f"Updated — status: {lc_instance.request_status}")
+            reversion.set_comment("Updated — status: %s" % lc_instance.request_status)
 
+        logger.info('Updated LcRequest #%s (status: %s)', pk, lc_instance.request_status)
         return Response(LCRequestDetailSerializer(lc_instance).data)
 
-    # ====================== LIST ======================
-    def get_lc_list(self, query_params):
-        qs = LcRequest.objects.prefetch_related("so_data").select_related("lc_details").order_by("-created_date")
+    # ── LIST ──────────────────────────────────────────────────────────────────
+
+    def get_lc_list(self, query_params) -> Response:
+        """Return a paginated, optionally filtered/searched list of LcRequests."""
+        qs = (
+            LcRequest.objects
+            .prefetch_related("so_data")
+            .select_related("lc_details")
+            .order_by("-created_date")
+        )
 
         if search := query_params.get("search"):
             qs = qs.filter(
@@ -263,15 +250,23 @@ class LCRequestService:
                 qs = qs.filter(request_status=st)
 
         paginator = Paginator(qs, int(query_params.get("pageSize", 20)))
-        page_obj = paginator.get_page(int(query_params.get("page", 1)))
+        page_obj  = paginator.get_page(int(query_params.get("page", 1)))
 
         serializer = LCRequestListSerializer(page_obj.object_list, many=True)
         return Response({"total": paginator.count, "results": serializer.data})
 
-    # ====================== DETAIL ======================
-    def get_lc_by_id(self, pk: int):
+    # ── DETAIL ────────────────────────────────────────────────────────────────
+
+    def get_lc_by_id(self, pk: int) -> Response:
+        """Return full detail for a single LcRequest by primary key."""
         try:
-            instance = LcRequest.objects.select_related("lc_details").prefetch_related("so_data").get(pk=pk)
+            instance = (
+                LcRequest.objects
+                .select_related("lc_details")
+                .prefetch_related("so_data")
+                .get(pk=pk)
+            )
             return Response(LCRequestDetailSerializer(instance).data)
         except LcRequest.DoesNotExist:
+            logger.warning('LcRequest #%s not found', pk)
             return Response({"error": "LC Request not found."}, status=status.HTTP_404_NOT_FOUND)

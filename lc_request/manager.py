@@ -1,26 +1,17 @@
 """
-Custom model managers for the LC app.
-Mirrors fi_vendor/manager.py pattern.
+Custom model managers for the lc_request app.
+Mirrors commons/manager.py BaseManager pattern.
 """
 from commons.manager import BaseManager
 
 
 class LCFileManager(BaseManager):
-    """
-    Manager for LCFiles model.
-    Provides filtered querysets scoped to an LC Request.
-    """
+    """Manager for LcFiles — provides querysets scoped to an LC Request."""
 
     def get_by_lc_request(self, lc_request_id: int, category: str = None):
         """
-        Return active files for a given LC Request, optionally filtered by category.
-
-        Args:
-            lc_request_id: PK of the parent LCRequest.
-            category:       Optional file category (e.g. 'LC_DOCUMENT').
-
-        Returns:
-            Filtered queryset of LCFiles.
+        Return active, non-deleted files for a given LcRequest PK.
+        Optionally filter by file category (e.g. 'LC_DOCUMENT').
         """
         qs = self.filter(
             is_active=True,
