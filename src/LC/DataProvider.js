@@ -1,8 +1,24 @@
 import {
     BASE_URL,
     STANDARD_METHOD_OPTIONS,
-    HEADER_JSON,
 } from "../App/Configs/AppConfigs";
+
+/**
+ * Read the auth token from localStorage at call time, not at module load time.
+ * HEADER_JSON in AppConfigs is built once on import (before login), so the
+ * Authorization value is always null if read statically.
+ */
+const getAuthToken = () =>
+    JSON.parse(
+        localStorage.getItem(`${process.env.REACT_APP_TOKEN_PREFIX}-auth-token`)
+    );
+
+const getAuthHeaders = () => ({
+    Accept: "application/json",
+    Authorization: getAuthToken(),
+    source: "workflow",
+    req: "list",
+});
 
 const dataProvider = {
 
@@ -10,7 +26,7 @@ const dataProvider = {
     getLCList: (url) => {
         return fetch(`${BASE_URL}${url}`, {
             method: "GET",
-            headers: HEADER_JSON,
+            headers: getAuthHeaders(),
             ...STANDARD_METHOD_OPTIONS,
         });
     },
@@ -19,7 +35,7 @@ const dataProvider = {
     getLCDetail: (url) => {
         return fetch(`${BASE_URL}${url}`, {
             method: "GET",
-            headers: HEADER_JSON,
+            headers: getAuthHeaders(),
             ...STANDARD_METHOD_OPTIONS,
         });
     },
@@ -27,7 +43,7 @@ const dataProvider = {
     getSODetails: (url) => {
         return fetch(`${BASE_URL}${url}`, {
             method: "GET",
-            headers: HEADER_JSON,
+            headers: getAuthHeaders(),
             ...STANDARD_METHOD_OPTIONS,
         });
     },
@@ -38,7 +54,7 @@ const dataProvider = {
         return fetch(`${BASE_URL}${url}`, {
             method: "POST",
             headers: {
-                Authorization: HEADER_JSON.Authorization,
+                Authorization: getAuthToken(),
             },
             body: body,
             ...STANDARD_METHOD_OPTIONS,
@@ -52,7 +68,7 @@ const dataProvider = {
         return fetch(`${BASE_URL}${url}`, {
             method: "POST",
             headers: {
-                Authorization: HEADER_JSON.Authorization,
+                Authorization: getAuthToken(),
             },
             body: body,
             ...STANDARD_METHOD_OPTIONS,
@@ -60,9 +76,13 @@ const dataProvider = {
     },
 
     // ── PATCH existing LC request (edit mode) ──
+    // Authorization header was missing entirely — added here.
     updateLCRequest: (url, body) => {
         return fetch(`${BASE_URL}${url}`, {
             method: "PATCH",
+            headers: {
+                Authorization: getAuthToken(),
+            },
             body: body,
             ...STANDARD_METHOD_OPTIONS,
         });
@@ -74,7 +94,7 @@ const dataProvider = {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: HEADER_JSON.Authorization,
+                Authorization: getAuthToken(),
             },
             ...STANDARD_METHOD_OPTIONS,
         });
@@ -84,7 +104,7 @@ const dataProvider = {
     getSapPayloadPreview: (url) => {
         return fetch(`${BASE_URL}${url}`, {
             method: "GET",
-            headers: HEADER_JSON,
+            headers: getAuthHeaders(),
             ...STANDARD_METHOD_OPTIONS,
         });
     },

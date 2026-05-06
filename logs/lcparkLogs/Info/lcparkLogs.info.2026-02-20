@@ -1,4 +1,0 @@
-[2026-02-20 15:29:51,322] -- INFO - sync_products_data.py -- insert_data - Line no - 101 -- CONNECTING ORACLE DB
-
-[2026-02-20 15:29:51,322] -- INFO - sync_products_data.py -- db_connection - Line no - 65 -- Initializing oracle Database connection --> 10.165.1.21:1542
-

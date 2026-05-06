@@ -32,3 +32,8 @@ LANDING_PAGE_FMT    = "https://staging.amns.in/LC/ApprovalForm/{}"
 APPLICATION_URL     = 'https://staging.amns.in/'
 API_PREFIX          = 'lcpark'
 LOGOUT_REDIRECT_URL = f'/{API_PREFIX}/admin/'
+
+# Remove console handler in UAT — logs go to files only
+LOGGING['loggers']['lc_request']['handlers'] = [
+    'lc_debug', 'lc_info', 'lc_warning', 'lc_error',
+]

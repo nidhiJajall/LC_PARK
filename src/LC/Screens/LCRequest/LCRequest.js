@@ -7,13 +7,15 @@ import React, { useState, useEffect, useRef } from "react";
 import {
     Button, Form, Input, Upload, Modal,
     Switch, DatePicker, Row, Col,
-    Tag, Spin, Divider,
+    Tag, Spin, Divider, Table, Tooltip,
 } from "antd";
 
 import {
     SaveOutlined, FilePdfOutlined, LockOutlined,
     FileSearchOutlined, PaperClipOutlined, RobotOutlined,
-    CheckCircleOutlined, SyncOutlined,
+    CheckCircleOutlined, SyncOutlined, HistoryOutlined,
+    CheckOutlined, EditOutlined, InfoCircleOutlined,
+    CloseCircleOutlined, EyeOutlined,
 } from "@ant-design/icons";
 
 import { useHistory, useParams } from "react-router-dom";
@@ -24,7 +26,7 @@ import { openNotification } from "swfrontend/COMS/NotificationMessageMapping";
 import { route_url }         from "swfrontend/AppConfigs";
 import { BASE_URL }          from "../../../App/Configs/AppConfigs";   // ← for attachment URL fix
 import dataProvider          from "../../DataProvider";
-import { LC_API_PATH, LC_SO_LOOKUP_API_PATH } from "../../Constants";
+import { LC_API_PATH, LC_OCR_API_PATH, LC_SO_LOOKUP_API_PATH, LC_SAP_LOGS_API_PATH } from "../../Constants";
 import SODetails             from "./Components/SODetails";
 
 // Enable strict custom date parsing
@@ -81,9 +83,9 @@ const SubHeading = ({ text }) => (
     </div>
 );
 
-const OCR_API_URL = "/lcpark/lc_request/ocr/";
 const OCR_PROJECT    = "LC PARK & ENTRY";
 const DATE_FIELDS    = ["opening_date", "dispatch_upto_date", "expiry_date"];
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helper: safely parse a date string to a dayjs object (strict mode)
@@ -139,6 +141,10 @@ const LCRequest = () => {
     const [ocrLoading, setOcrLoading]             = useState(false);
     const [ocrLoaded, setOcrLoaded]               = useState(false);
     const [lcDetailsVisible, setLcDetailsVisible] = useState(false);
+    const [lcStatus, setLcStatus]                 = useState(null);   // 'draft' | 'synced'
+    const [sapLogs, setSapLogs]                   = useState([]);
+    const [sapLogLoading, setSapLogLoading]       = useState(false);
+    const [sapPayloadModal, setSapPayloadModal]   = useState(null);
 
     // ── PDF preview state ─────────────────────────────────────────────────────
     // Stores a blob: URL created from the uploaded file for the in-page preview
@@ -154,6 +160,8 @@ const LCRequest = () => {
                 if (data.so_details && data.so_details.length > 0) {
                     setFetchedData(data.so_details);
                 }
+
+                setLcStatus(data.status || null);
 
                 const fields = { ...data };
 
@@ -186,6 +194,20 @@ const LCRequest = () => {
             });
     }, [isEdit, editId]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    // ── SAP sync log fetch ────────────────────────────────────────────────────
+    const fetchSapLogs = () => {
+        if (!isEdit) return;
+        setSapLogLoading(true);
+        dataProvider.getLCDetail(`${LC_API_PATH}${editId}/sap_logs/`)
+            .then((r) => r.json())
+            .then((data) => { setSapLogs(data.results || []); setSapLogLoading(false); })
+            .catch(() => setSapLogLoading(false));
+    };
+
+    useEffect(() => {
+        if (isEdit) fetchSapLogs();
+    }, [isEdit, editId]); // eslint-disable-line react-hooks/exhaustive-deps
+
     // ── OCR call + PDF preview ────────────────────────────────────────────────
     useEffect(() => {
         // ── File added ──
@@ -204,7 +226,8 @@ const LCRequest = () => {
             fd.append("file",         file);
             fd.append("project_name", OCR_PROJECT);
 
-            fetch(OCR_API_URL, { method: "POST", body: fd })
+            // Use dataProvider so the auth token is included — direct fetch was missing auth
+            dataProvider.callOCRApi(LC_OCR_API_PATH, fd)
                 .then((res) => {
                     if (!res.ok) throw new Error(`OCR API responded with ${res.status}`);
                     return res.json();
@@ -386,41 +409,38 @@ const LCRequest = () => {
         Modal.confirm({
             title  : "Sync to SAP",
             content: (
-                <span>
-                    This will post LC <strong>#{editId}</strong> to SAP.
-                    Make sure the record is saved before syncing.
-                </span>
+                <div>
+                    <p>This will post LC <strong>#{editId}</strong> to SAP.</p>
+                    <p style={{ color: "#e67e00", fontSize: "13px", marginTop: "6px" }}>
+                        ⚠ <strong>Important:</strong> Only saved data is synced.
+                        Please <strong>Save Draft</strong> first if you have unsaved changes.
+                    </p>
+                </div>
             ),
             okText        : "Yes, Sync",
             cancelText    : "Cancel",
             okButtonProps : { style: { background: "#1890ff", borderColor: "#1890ff" } },
             onOk: () => {
                 setShowProgress(true);
-
-                // dataProvider.syncLCToSAP must issue a  POST  request.
-                // If your DataProvider only does GET for this method, change it to:
-                //
-                //   fetch(`${LC_API_PATH}${editId}/sync_to_sap/`, { method: "POST" })
-                //
                 dataProvider
                     .syncLCToSAP(`${LC_API_PATH}${editId}/sync_to_sap/`)
                     .then((res) => res.json().then((body) => ({ ok: res.ok, body })))
                     .then(({ ok, body }) => {
                         setShowProgress(false);
+                        fetchSapLogs();   // refresh log table regardless of outcome
                         if (ok) {
+                            setLcStatus("synced");
                             openNotification(
                                 "success",
                                 "Synced to SAP",
                                 body.message || "LC Request posted to SAP successfully."
                             );
                         } else {
-                            // Show the SAP error message if present
                             const sapMsg =
                                 (body.sap_response?.error?.message?.value) ||
                                 (typeof body.sap_response === "string" ? body.sap_response : null) ||
                                 body.error ||
                                 "SAP sync failed. Check server logs.";
-
                             openNotification("error", "Sync Failed", sapMsg);
                         }
                     })
@@ -486,8 +506,14 @@ const LCRequest = () => {
             .then((res) => {
                 setShowProgress(false);
                 if (res.ok) {
-                    openNotification("success", "Success", "LC Request Saved as Draft!");
-                    history.push(route_url.url + "/lc_request");
+                    res.json().then((saved) => {
+                        setLcStatus(saved.status || "draft");
+                        openNotification("success", "Saved", "LC Request saved as Draft.");
+                        // If this was a new record, redirect to edit URL so sync works
+                        if (!isEdit && saved.id) {
+                            history.push(`${route_url.url}/lc_request/${saved.id}`);
+                        }
+                    });
                 } else {
                     res.json().then((err) =>
                         openNotification("error", "Error", err.message || "Something went wrong")
@@ -668,8 +694,136 @@ const LCRequest = () => {
         </>
     );
 
+    // ── SAP log table columns ─────────────────────────────────────────────────
+    const sapLogColumns = [
+        {
+            title: "Log #", dataIndex: "id", key: "id", width: 70,
+            render: (v) => <span style={{ color: "#888", fontSize: "12px" }}>#{v}</span>,
+        },
+        {
+            title: "Date & Time", dataIndex: "created_date", key: "created_date", width: 160,
+            render: (v) => v ? new Date(v).toLocaleString("en-IN") : "—",
+        },
+        {
+            title: "Synced By", dataIndex: "synced_by", key: "synced_by", width: 130,
+            render: (v) => v || <span style={{ color: "#bbb" }}>—</span>,
+        },
+        {
+            title: "Status", dataIndex: "http_status", key: "http_status", width: 90, align: "center",
+            render: (v) => (
+                <Tag color={v >= 200 && v < 300 ? "green" : "red"} style={{ fontWeight: 600 }}>{v || "—"}</Tag>
+            ),
+        },
+        {
+            title: "Result", dataIndex: "success", key: "success", width: 100, align: "center",
+            render: (v) => v
+                ? <Tag color="success" icon={<CheckCircleOutlined />}>Success</Tag>
+                : <Tag color="error" icon={<CloseCircleOutlined />}>Failed</Tag>,
+        },
+        {
+            title: "View", key: "view", width: 80, align: "center",
+            render: (_, record) => (
+                <Button size="small" icon={<EyeOutlined />}
+                    onClick={() => setSapPayloadModal(record)}
+                    style={{ borderRadius: "4px", fontSize: "12px" }}>
+                    View
+                </Button>
+            ),
+        },
+    ];
+
+    // ── Status badge config ───────────────────────────────────────────────────
+    const statusCfg = {
+        draft    : { color: "orange", label: "Draft"         },
+        submitted: { color: "blue",   label: "Submitted"     },
+        synced   : { color: "green",  label: "Synced to SAP" },
+    };
+    const badge = lcStatus ? statusCfg[lcStatus] : null;
+
     return (
         <div style={{ padding: "4px 0" }}>
+
+            {/* ── Status bar (edit mode only) ──────────────────────────────── */}
+            {isEdit && badge && (
+                <div style={{
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    background: "#fff", border: "1px solid #e8e8e8", borderRadius: "10px",
+                    padding: "10px 20px", marginBottom: "14px",
+                    boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+                }}>
+                    <span style={{ fontWeight: 700, fontSize: "14px", color: "#333" }}>
+                        LC Request&nbsp;<span style={{ color: "#b5000a" }}>#{editId}</span>
+                    </span>
+                    <Tag
+                        color={badge.color}
+                        style={{ fontSize: "13px", padding: "4px 14px", fontWeight: 600, borderRadius: "20px", margin: 0 }}
+                    >
+                        {badge.label}
+                    </Tag>
+                </div>
+            )}
+
+            {/* ── SAP Sync Log table (edit mode, only when logs exist) ─────── */}
+            {isEdit && sapLogs.length > 0 && (
+                <div style={{ ...sectionStyle, marginBottom: "16px" }}>
+                    <SectionHeader
+                        icon={<HistoryOutlined />}
+                        title="SAP Sync Log"
+                        extra={
+                            <Button size="small" onClick={fetchSapLogs} loading={sapLogLoading}
+                                style={{ fontSize: "12px", borderRadius: "6px" }}>
+                                Refresh
+                            </Button>
+                        }
+                    />
+                    <Table
+                        size="small"
+                        rowKey="id"
+                        dataSource={sapLogs}
+                        columns={sapLogColumns}
+                        loading={sapLogLoading}
+                        pagination={{ pageSize: 5, size: "small" }}
+                        scroll={{ x: 700 }}
+                        style={{ borderRadius: "8px", overflow: "hidden" }}
+                    />
+                </div>
+            )}
+
+            {/* ── Payload / Response modal ──────────────────────────────────── */}
+            <Modal
+                open={!!sapPayloadModal}
+                title={sapPayloadModal ? `SAP Log #${sapPayloadModal.id} — ${sapPayloadModal.success ? "✓ Success" : "✗ Failed"}` : "SAP Log"}
+                onCancel={() => setSapPayloadModal(null)}
+                footer={null}
+                width={860}
+                styles={{ body: { maxHeight: "70vh", overflowY: "auto" } }}
+            >
+                {sapPayloadModal && (
+                    <Row gutter={[16, 0]}>
+                        <Col xs={24} md={12}>
+                            <div style={{ fontWeight: 700, marginBottom: 6, color: "#555" }}>Payload Sent</div>
+                            <pre style={{
+                                background: "#f5f5f5", padding: "12px", borderRadius: "6px",
+                                fontSize: "11px", maxHeight: "55vh", overflowY: "auto",
+                                whiteSpace: "pre-wrap", wordBreak: "break-all",
+                            }}>
+                                {JSON.stringify(sapPayloadModal.payload, null, 2)}
+                            </pre>
+                        </Col>
+                        <Col xs={24} md={12}>
+                            <div style={{ fontWeight: 700, marginBottom: 6, color: "#555" }}>SAP Response</div>
+                            <pre style={{
+                                background: "#f5f5f5", padding: "12px", borderRadius: "6px",
+                                fontSize: "11px", maxHeight: "55vh", overflowY: "auto",
+                                whiteSpace: "pre-wrap", wordBreak: "break-all",
+                            }}>
+                                {JSON.stringify(sapPayloadModal.response, null, 2)}
+                            </pre>
+                        </Col>
+                    </Row>
+                )}
+            </Modal>
+
             <Form
                 className="ant-form ant-form-vertical"
                 form={form}

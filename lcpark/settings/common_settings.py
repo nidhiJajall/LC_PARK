@@ -78,6 +78,98 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lcpark.wsgi.application'
 
+# ── Logging ───────────────────────────────────────────────────────────────────
+# Matches the existing log folder structure under logs/
+# Format mirrors the framework convention:
+#   [YYYY-MM-DD HH:MM:SS,ms] -- LEVEL - filename -- funcName - Line no - N -- message
+#
+# Loggers:
+#   lc_request  → logs/API_LOGS/{Debug,Info,Warning,Error}/
+#   root        → logs/lcparkLogs/{Debug,Info,Warning,Error}/  (catches everything else)
+
+_LOG_DIR = os.path.join(BASE_DIR, 'logs')
+
+_LOG_FMT = '[%(asctime)s] -- %(levelname)s - %(filename)s -- %(funcName)s - Line no - %(lineno)d -- %(message)s'
+_DATE_FMT = '%Y-%m-%d %H:%M:%S'
+
+
+def _handler(path, level):
+    """Return a TimedRotatingFileHandler config dict for the given path and level."""
+    return {
+        'class':       'logging.handlers.TimedRotatingFileHandler',
+        'filename':    path,
+        'when':        'midnight',
+        'backupCount': 30,
+        'encoding':    'utf-8',
+        'formatter':   'standard',
+        'level':       level,
+    }
+
+
+LOGGING = {
+    'version':                  1,
+    'disable_existing_loggers': False,
+
+    'formatters': {
+        'standard': {
+            'format':  _LOG_FMT,
+            'datefmt': _DATE_FMT,
+        },
+    },
+
+    'handlers': {
+        # ── lc_request app logs → logs/API_LOGS/ ─────────────────────────────
+        'lc_debug': _handler(
+            os.path.join(_LOG_DIR, 'API_LOGS', 'Debug',   'API_LOGS.debug'), 'DEBUG'
+        ),
+        'lc_info': _handler(
+            os.path.join(_LOG_DIR, 'API_LOGS', 'Info',    'API_LOGS.info'),  'INFO'
+        ),
+        'lc_warning': _handler(
+            os.path.join(_LOG_DIR, 'API_LOGS', 'Warning', 'API_LOGS.warn'),  'WARNING'
+        ),
+        'lc_error': _handler(
+            os.path.join(_LOG_DIR, 'API_LOGS', 'Error',   'API_LOGS.error'), 'ERROR'
+        ),
+
+        # ── root / framework logs → logs/lcparkLogs/ ─────────────────────────
+        'root_debug': _handler(
+            os.path.join(_LOG_DIR, 'lcparkLogs', 'Debug',   'lcparkLogs.debug'), 'DEBUG'
+        ),
+        'root_info': _handler(
+            os.path.join(_LOG_DIR, 'lcparkLogs', 'Info',    'lcparkLogs.info'),  'INFO'
+        ),
+        'root_warning': _handler(
+            os.path.join(_LOG_DIR, 'lcparkLogs', 'Warning', 'lcparkLogs.warn'),  'WARNING'
+        ),
+        'root_error': _handler(
+            os.path.join(_LOG_DIR, 'lcparkLogs', 'Error',   'lcparkLogs.error'), 'ERROR'
+        ),
+
+        # ── console (dev convenience) ─────────────────────────────────────────
+        'console': {
+            'class':     'logging.StreamHandler',
+            'formatter': 'standard',
+            'level':     'DEBUG',
+        },
+    },
+
+    'loggers': {
+        # lc_request app — views, services, sap_services, manager
+        'lc_request': {
+            'handlers':  ['lc_debug', 'lc_info', 'lc_warning', 'lc_error', 'console'],
+            'level':     'DEBUG',
+            'propagate': False,
+        },
+    },
+
+    # Root logger catches everything not handled above (framework, django, etc.)
+    'root': {
+        'handlers': ['root_debug', 'root_info', 'root_warning', 'root_error'],
+        'level':    'INFO',
+    },
+}
+
 # ── REST Framework ────────────────────────────────────────────────────────────
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
